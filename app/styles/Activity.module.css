@@ -1,0 +1,81 @@
+.whiteCard {
+    background-color: white;
+    border-radius: 30px;
+    padding: 2rem 1.5rem;
+    width: 100%;
+    min-height: 450px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.cardHeader {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.counter {
+    padding: 0.5rem 1rem;
+    font-weight: bold;
+    color: #042A73;
+    font-size: 1rem;
+}
+
+.activityContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.instructionText {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #042A73;
+    text-align: center;
+}
+
+.placeholder {
+    text-align: center;
+    padding: 2rem;
+    background-color: #f0f0f0;
+    border-radius: 15px;
+    width: 100%;
+}
+
+.optionsGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    width: 100%;
+}
+
+.optionButton {
+    width: 100%;
+    height: 80px;
+    background-color: #FFD700;
+    border: 3px solid #FFA500;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 2rem;
+    font-weight: bold;
+    color: white;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.optionButton:hover {
+    transform: translateY(-2px);
+}
+
+.optionButton:active {
+    transform: scale(0.95);
+}

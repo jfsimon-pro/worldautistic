@@ -1,0 +1,43 @@
+const COLOR_AUDIO_FILES: Record<'en' | 'pt' | 'es', Record<string, number>> = {
+  en: {
+    black: require('./en/colors/black_.mp3'),
+    blue: require('./en/colors/blue_.mp3'),
+    brown: require('./en/colors/brown_.mp3'),
+    grey: require('./en/colors/grey_.mp3'),
+    green: require('./en/colors/green_.mp3'),
+    orange: require('./en/colors/orange_.mp3'),
+    pink: require('./en/colors/pink_.mp3'),
+    purple: require('./en/colors/purple_.mp3'),
+    red: require('./en/colors/red_.mp3'),
+    white: require('./en/colors/white_.mp3'),
+    yellow: require('./en/colors/yellow_.mp3'),
+  },
+  pt: {
+    black: require('./pt/colors/black_.mp3'),
+    blue: require('./pt/colors/blue_.mp3'),
+    brown: require('./pt/colors/brown_.mp3'),
+    grey: require('./pt/colors/grey_.mp3'),
+    green: require('./pt/colors/green_.mp3'),
+    orange: require('./pt/colors/orange_.mp3'),
+    pink: require('./pt/colors/pink_.mp3'),
+    purple: require('./pt/colors/purple_.mp3'),
+    red: require('./pt/colors/red_.mp3'),
+    white: require('./pt/colors/white_.mp3'),
+    yellow: require('./pt/colors/yellow_.mp3'),
+  },
+  es: {
+    black: require('./es/colors/black_.mp3'),
+    blue: require('./es/colors/blue_.mp3'),
+    brown: require('./es/colors/brown_.mp3'),
+    grey: require('./es/colors/grey_.mp3'),
+    green: require('./es/colors/green_.mp3'),
+    orange: require('./es/colors/orange_.mp3'),
+    pink: require('./es/colors/pink_.mp3'),
+    purple: require('./es/colors/purple_.mp3'),
+    red: require('./es/colors/red_.mp3'),
+    white: require('./es/colors/white_.mp3'),
+    yellow: require('./es/colors/yellow_.mp3'),
+  },
+};
+
+export default COLOR_AUDIO_FILES;

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Autistic - Atividades</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            overflow-y: auto;
+            background-color: #60A5FA;
+            padding-bottom: 8rem;
+            padding-top: 1rem;
+        }
+
+        /* Background Image */
+        .background-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .background-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Header with Back Button */
+        .header {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 400px;
+            padding: 0 1rem;
+            margin-top: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .back-button {
+            width: 3rem;
+            height: 3rem;
+            background-color: #FFE500;
+            border: none;
+            border-radius: 0.75rem;
+            border-bottom: 4px solid #F1B812;
+            border-right: 2px solid #F1B812;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .back-button:hover {
+            transform: scale(1.05);
+        }
+
+        .back-button:active {
+            transform: scale(0.95);
+        }
+
+        .back-icon {
+            width: 1.5rem;
+            height: 1.5rem;
+            color: black;
+        }
+
+        /* Main Content */
+        .main-content {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 400px;
+            padding: 0 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        /* Activity Card Base */
+        .activity-card {
+            position: relative;
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            min-height: 120px;
+        }
+
+        .activity-card:active {
+            transform: scale(0.98);
+        }
+
+        /* Large Card (full width) */
+        .card-large {
+            width: 100%;
+            min-height: 140px;
+        }
+
+        /* Small Cards Grid */
+        .small-cards-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+
+        .card-small {
+            min-height: 140px;
+        }
+
+        /* Card Color Variants */
+        .card-numbers {
+            background-color: #AAD3E9;
+            border: 4px solid #56A9D4;
+        }
+
+        .card-numbers .card-title {
+            color: #090889;
+        }
+
+        .card-letters {
+            background-color: #F98EB0;
+            border: 4px solid #F6467f;
+        }
+
+        .card-letters .card-title {
+            color: #800129;
+        }
+
+        .card-animals {
+            background-color: #8ECF99;
+            border: 4px solid #4E9F62;
+        }
+
+        .card-animals .card-title {
+            color: #134D2F;
+        }
+
+        .card-food {
+            background-color: #E07A5F;
+            border: 4px solid #9D3C27;
+        }
+
+        .card-food .card-title {
+            color: #3F1D14;
+        }
+
+        .card-objects {
+            background-color: #6A4C93;
+            border: 4px solid #432C64;
+        }
+
+        .card-objects .card-title {
+            color: #E0D6F5;
+        }
+
+        .card-colors {
+            background-color: #D9F99D;
+            border: 4px solid #A3E635;
+        }
+
+        .card-colors .card-title {
+            color: #166534;
+        }
+
+        /* Card Content */
+        .card-image {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+        }
+
+        .card-large .card-image {
+            width: 100px;
+            height: 100px;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            letter-spacing: 0.025em;
+            text-transform: uppercase;
+        }
+
+        .card-small .card-title {
+            font-size: 1.125rem;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(to bottom, #2563EB, #1E40AF);
+            box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.2);
+            z-index: 30;
+            display: flex;
+            justify-content: space-around;
+            padding: 1rem 0 1.5rem 0;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            padding: 0.5rem 2rem;
+            transition: all 0.2s;
+        }
+
+        .nav-item.active {
+            color: white;
+        }
+
+        .nav-icon {
+            width: 2rem;
+            height: 2rem;
+        }
+
+        .nav-text {
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Background -->
+    <div class="background-container">
+        <img src="public/images/background.png" alt="Background" class="background-image">
+    </div>
+
+    <!-- Header with Back Button -->
+    <div class="header">
+        <a href="home.html" class="back-button">
+            <svg xmlns="http://www.w3.org/2000/svg" class="back-icon" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+        </a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+
+        <!-- Numbers Card (Large) -->
+        <a href="numberLevelSelection.html" class="activity-card card-large card-numbers">
+            <img src="public/images/numbers.png" alt="Números" class="card-image">
+            <div class="card-title">Números</div>
+        </a>
+
+        <!-- Letters Card (Large) -->
+        <a href="#" class="activity-card card-large card-letters">
+            <img src="public/images/letters.png" alt="Letras" class="card-image">
+            <div class="card-title">Letras</div>
+        </a>
+
+        <!-- Small Cards Grid -->
+        <div class="small-cards-grid">
+            <!-- Animals Card (Small) -->
+            <a href="animals.html" class="activity-card card-small card-animals">
+                <img src="public/images/animals.png" alt="Animais" class="card-image">
+                <div class="card-title">Animais</div>
+            </a>
+
+            <!-- Food Card (Small) -->
+            <a href="food.html" class="activity-card card-small card-food">
+                <img src="public/images/food.png" alt="Comida" class="card-image">
+                <div class="card-title">Comida</div>
+            </a>
+
+            <!-- Objects Card (Small) -->
+            <a href="objects.html" class="activity-card card-small card-objects">
+                <img src="public/images/objects.png" alt="Objetos" class="card-image">
+                <div class="card-title">Objetos</div>
+            </a>
+
+            <!-- Colors Card (Small) -->
+            <a href="colors.html" class="activity-card card-small card-colors">
+                <img src="public/images/colors.png" alt="Cores" class="card-image">
+                <div class="card-title">Cores</div>
+            </a>
+        </div>
+
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <a href="home.html" class="nav-item active">
+            <svg xmlns="http://www.w3.org/2000/svg" class="nav-icon" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                    d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+            </svg>
+            <span class="nav-text">Home</span>
+        </a>
+        <a href="#" class="nav-item">
+            <svg xmlns="http://www.w3.org/2000/svg" class="nav-icon" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            <span class="nav-text">Settings</span>
+        </a>
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,118 @@
+.container {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    overflow-y: auto;
+    background-color: #60A5FA;
+    padding-bottom: 6rem;
+    padding-top: 1rem;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+}
+
+.background-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.background-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.header-container {
+    position: fixed;
+    top: 1.5rem;
+    left: 1.5rem;
+    z-index: 20;
+}
+
+.header-btn {
+    width: 3rem;
+    height: 3rem;
+    background-color: #FFE500;
+    border: none;
+    border-radius: 0.75rem;
+    border-bottom: 4px solid #F1B812;
+    border-right: 2px solid #F1B812;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.1s;
+    text-decoration: none;
+}
+
+.header-btn:hover {
+    transform: scale(1.05);
+}
+
+.header-btn:active {
+    transform: scale(0.95);
+}
+
+.header-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    color: black;
+}
+
+.main-content {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 400px;
+    padding: 4rem 1rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(to bottom, #2563EB, #1E40AF);
+    box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.2);
+    z-index: 30;
+    display: flex;
+    justify-content: space-around;
+    padding: 0.5rem 0;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    padding: 0.25rem 2rem;
+    transition: all 0.2s;
+}
+
+.nav-item.active {
+    color: white;
+}
+
+.nav-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.nav-text {
+    font-size: 0.75rem;
+    font-weight: 500;
+}

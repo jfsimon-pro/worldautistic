@@ -1,0 +1,101 @@
+[
+  { 
+    "id": "white", 
+    "pt": "Branco", 
+    "en": "White", 
+    "es": "Blanco", 
+    "color": "#111111", 
+    "borderColor": "#DCDCDC", 
+    "textColor": "#F8F8F8" 
+  },
+  { 
+    "id": "black", 
+    "pt": "Preto", 
+    "en": "Black", 
+    "es": "Negro", 
+    "color": "#F8F8F8", 
+    "borderColor": "#000000", 
+    "textColor": "#000000" 
+  },
+  { 
+    "id": "blue", 
+    "pt": "Azul", 
+    "en": "Blue", 
+    "es": "Azul", 
+    "color": "#F8F8F8", 
+    "borderColor": "#00008B", 
+    "textColor": "#000000" 
+  },
+  { 
+    "id": "brown", 
+    "pt": "Marrom", 
+    "en": "Brown", 
+    "es": "Marrón", 
+    "color": "#F8F8F8", 
+    "borderColor": "#8B4513", 
+    "textColor": "#000000" 
+  },
+  { 
+    "id": "grey", 
+    "pt": "Cinza", 
+    "en": "Grey", 
+    "es": "Gris", 
+    "color": "#F8F8F8", 
+    "borderColor": "#696969", 
+    "textColor": "#000000" 
+  },
+  { 
+    "id": "green", 
+    "pt": "Verde", 
+    "en": "Green", 
+    "es": "Verde", 
+    "color": "#F8F8F8", 
+    "borderColor": "#006400", 
+    "textColor": "#000000" 
+  },
+  { 
+    "id": "orange", 
+    "pt": "Laranja", 
+    "en": "Orange", 
+    "es": "Naranja", 
+    "color": "#F8F8F8", 
+    "borderColor": "#FF8C00", 
+    "textColor": "#000000" 
+  },
+  { 
+    "id": "pink", 
+    "pt": "Rosa", 
+    "en": "Pink", 
+    "es": "Rosa", 
+    "color": "#F8F8F8", 
+    "borderColor": "#FF69B4", 
+    "textColor": "#000000" 
+  },
+  { 
+    "id": "purple", 
+    "pt": "Roxo", 
+    "en": "Purple", 
+    "es": "Morado", 
+    "color": "#F8F8F8", 
+    "borderColor": "#800080", 
+    "textColor": "#000000" 
+  },
+  { 
+    "id": "red", 
+    "pt": "Vermelho", 
+    "en": "Red", 
+    "es": "Rojo", 
+    "color": "#F8F8F8", 
+    "borderColor": "#8B0000", 
+    "textColor": "#000000" 
+  },
+  { 
+    "id": "yellow", 
+    "pt": "Amarelo", 
+    "en": "Yellow", 
+    "es": "Amarillo", 
+    "color": "#F8F8F8", 
+    "borderColor": "#FFD700", 
+    "textColor": "#000000" 
+  }
+]

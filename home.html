@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Autistic - Home</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            overflow-y: auto;
+            background-color: #60A5FA;
+            padding-bottom: 6rem;
+            padding-top: 1rem;
+        }
+
+        /* Background Image */
+        .background-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .background-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Header Logo */
+        .header-logo {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .header-text {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: white;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+
+        .puzzle-icon {
+            width: 2rem;
+            height: 2rem;
+            object-fit: contain;
+        }
+
+        /* Main Content */
+        .main-content {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 400px;
+            padding: 0 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        /* Home Card Base */
+        .home-card {
+            position: relative;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 140px;
+        }
+
+        .home-card:active {
+            transform: scale(0.98);
+        }
+
+        /* Large Card (full width) */
+        .card-large {
+            width: 100%;
+        }
+
+        /* Small Cards Container */
+        .small-cards-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+
+        .card-small {
+            min-height: 200px;
+        }
+
+        /* Card Color Variants */
+        .card-activities {
+            background-color: #FEED56;
+            border: 4px solid #F1B812;
+        }
+
+        .card-commands {
+            background-color: #EB4335;
+            border: 4px solid #B22418;
+        }
+
+        .card-frequencies {
+            background-color: #F67C41;
+            border: 4px solid #D76900;
+        }
+
+        .card-games {
+            background-color: #34A853;
+            border: 4px solid #2B753F;
+        }
+
+        /* Card Content */
+        .card-content {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            flex: 1;
+        }
+
+        .card-small .card-content {
+            align-items: center;
+            text-align: center;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #6F5300;
+            letter-spacing: 0.025em;
+            margin-bottom: 1rem;
+        }
+
+        .card-large .card-title {
+            text-align: left;
+        }
+
+        .card-small .card-title {
+            font-size: 1rem;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-commands .card-title,
+        .card-frequencies .card-title,
+        .card-games .card-title {
+            color: white;
+        }
+
+        .card-image-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-image {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+        }
+
+        .card-small .card-image {
+            width: 80px;
+            height: 80px;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(to bottom, #2563EB, #1E40AF);
+            box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.2);
+            z-index: 30;
+            display: flex;
+            justify-content: space-around;
+            padding: 1rem 0 1.5rem 0;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            padding: 0.5rem 2rem;
+            transition: all 0.2s;
+        }
+
+        .nav-item.active {
+            color: white;
+        }
+
+        .nav-icon {
+            width: 2rem;
+            height: 2rem;
+        }
+
+        .nav-text {
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Background -->
+    <div class="background-container">
+        <img src="public/images/background.png" alt="Background" class="background-image">
+    </div>
+
+    <!-- Header Logo -->
+    <div class="header-logo">
+        <span class="header-text">WORLD<br>AUTISTIC</span>
+        <img src="public/images/puzzle.png" alt="Puzzle" class="puzzle-icon">
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+
+        <!-- Activities Card (Large) -->
+        <a href="activities.html" class="home-card card-large card-activities">
+            <div class="card-content">
+                <div class="card-title">Atividades</div>
+            </div>
+            <div class="card-image-wrapper">
+                <img src="public/images/spaceman-activity.png" alt="Atividades" class="card-image">
+            </div>
+        </a>
+
+        <!-- Commands Card (Large) -->
+        <a href="commands.html" class="home-card card-large card-commands">
+            <div class="card-content">
+                <div class="card-title">Comandos de Voz</div>
+            </div>
+            <div class="card-image-wrapper">
+                <img src="public/images/spaceman-megaphone.png" alt="Comandos de Voz" class="card-image">
+            </div>
+        </a>
+
+        <!-- Frequencies Card (Large) -->
+        <a href="frequenciesCategorySelection.html" class="home-card card-large card-frequencies">
+            <div class="card-content">
+                <div class="card-title">Frequências Sonoras</div>
+            </div>
+            <div class="card-image-wrapper">
+                <img src="public/images/spaceman-music.png" alt="Frequências Sonoras" class="card-image">
+            </div>
+        </a>
+
+        <!-- Small Cards Row -->
+        <div class="small-cards-row">
+        </div>
+
+        <!-- Games Card (Large) -->
+        <a href="games.html" class="home-card card-large card-games">
+            <div class="card-content">
+                <div class="card-title">Jogos</div>
+            </div>
+            <div class="card-image-wrapper">
+                <img src="public/images/spaceman-game.png" alt="Jogos" class="card-image">
+            </div>
+        </a>
+
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <a href="home.html" class="nav-item active">
+            <svg xmlns="http://www.w3.org/2000/svg" class="nav-icon" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                    d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+            </svg>
+            <span class="nav-text">Home</span>
+        </a>
+        <a href="#" class="nav-item">
+            <svg xmlns="http://www.w3.org/2000/svg" class="nav-icon" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            <span class="nav-text">Settings</span>
+        </a>
+    </div>
+
+</body>
+
+</html>

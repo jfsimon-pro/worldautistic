@@ -1,0 +1,210 @@
+/* Extracted from home.html */
+.container {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    overflow-y: auto;
+    background-color: #60A5FA;
+    padding-bottom: 6rem;
+    padding-top: 1rem;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+}
+
+.background-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.background-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.header-logo {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+}
+
+.header-text {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+    letter-spacing: 2px;
+}
+
+.puzzle-icon {
+    width: 2rem;
+    height: 2rem;
+    object-fit: contain;
+}
+
+.main-content {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 400px;
+    padding: 0 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.home-card {
+    position: relative;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 140px;
+}
+
+.home-card:active {
+    transform: scale(0.98);
+}
+
+.card-large {
+    width: 100%;
+}
+
+.small-cards-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+
+.card-small {
+    min-height: 200px;
+}
+
+.card-activities {
+    background-color: #FEED56;
+    border: 4px solid #F1B812;
+}
+
+.card-commands {
+    background-color: #EB4335;
+    border: 4px solid #B22418;
+}
+
+.card-frequencies {
+    background-color: #F67C41;
+    border: 4px solid #D76900;
+}
+
+.card-games {
+    background-color: #34A853;
+    border: 4px solid #2B753F;
+}
+
+.card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    flex: 1;
+}
+
+.card-small .card-content {
+    align-items: center;
+    text-align: center;
+}
+
+.card-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #6F5300;
+    letter-spacing: 0.025em;
+    margin-bottom: 1rem;
+}
+
+.card-large .card-title {
+    text-align: left;
+}
+
+.card-small .card-title {
+    font-size: 1rem;
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+.card-commands .card-title,
+.card-frequencies .card-title,
+.card-games .card-title {
+    color: white;
+}
+
+.card-image-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-image {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+}
+
+.card-small .card-image {
+    width: 80px;
+    height: 80px;
+}
+
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(to bottom, #2563EB, #1E40AF);
+    box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.2);
+    z-index: 30;
+    display: flex;
+    justify-content: space-around;
+    padding: 1rem 0 1.5rem 0;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    padding: 0.5rem 2rem;
+    transition: all 0.2s;
+}
+
+.nav-item.active {
+    color: white;
+}
+
+.nav-icon {
+    width: 2rem;
+    height: 2rem;
+}
+
+.nav-text {
+    font-size: 0.75rem;
+    font-weight: 500;
+}

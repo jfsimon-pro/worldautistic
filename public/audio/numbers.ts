@@ -1,0 +1,55 @@
+const NUMBER_AUDIO_FILES: Record<'en' | 'pt' | 'es', Record<string, number>> = {
+  en: {
+    1: require('./en/numbers/One_.mp3'),
+    2: require('./en/numbers/Two_.mp3'),
+    3: require('./en/numbers/Three_.mp3'),
+    4: require('./en/numbers/Four_.mp3'),
+    5: require('./en/numbers/Five_.mp3'),
+    6: require('./en/numbers/Six_.mp3'),
+    7: require('./en/numbers/Seven_.mp3'),
+    8: require('./en/numbers/Eight_.mp3'),
+    9: require('./en/numbers/Nine_.mp3'),
+    10: require('./en/numbers/Ten_.mp3'),
+    11: require('./en/numbers/Eleven_.mp3'),
+    12: require('./en/numbers/Twelve_.mp3'),
+    13: require('./en/numbers/Thirteen_.mp3'),
+    14: require('./en/numbers/Fourteen_.mp3'),
+    15: require('./en/numbers/Fifteen_.mp3')
+  },
+  pt: {
+    1: require('./pt/numbers/One_.mp3'),
+    2: require('./pt/numbers/Two_.mp3'),
+    3: require('./pt/numbers/Three_.mp3'),
+    4: require('./pt/numbers/Four_.mp3'),
+    5: require('./pt/numbers/Five_.mp3'),
+    6: require('./pt/numbers/Six_.mp3'),
+    7: require('./pt/numbers/Seven_.mp3'),
+    8: require('./pt/numbers/Eight_.mp3'),
+    9: require('./pt/numbers/Nine_.mp3'),
+    10: require('./pt/numbers/Ten_.mp3'),
+    11: require('./pt/numbers/Eleven_.mp3'),
+    12: require('./pt/numbers/Twelve_.mp3'),
+    13: require('./pt/numbers/Thirteen_.mp3'),
+    14: require('./pt/numbers/Fourteen_.mp3'),
+    15: require('./pt/numbers/Fifteen_.mp3')
+  },
+  es: {
+    1: require('./es/numbers/One_.mp3'),
+    2: require('./es/numbers/Two_.mp3'),
+    3: require('./es/numbers/Three_.mp3'),
+    4: require('./es/numbers/Four_.mp3'),
+    5: require('./es/numbers/Five_.mp3'),
+    6: require('./es/numbers/Six_.mp3'),
+    7: require('./es/numbers/Seven_.mp3'),
+    8: require('./es/numbers/Eight_.mp3'),
+    9: require('./es/numbers/Nine_.mp3'),
+    10: require('./es/numbers/Ten_.mp3'),
+    11: require('./es/numbers/Eleven_.mp3'),
+    12: require('./es/numbers/Twelve_.mp3'),
+    13: require('./es/numbers/Thirteen_.mp3'),
+    14: require('./es/numbers/Fourteen_.mp3'),
+    15: require('./es/numbers/Fifteen_.mp3')
+  },
+};
+
+export default NUMBER_AUDIO_FILES;
