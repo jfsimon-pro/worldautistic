@@ -71,7 +71,7 @@ export default function ObjectsPage() {
     };
 
     return (
-        <PageLayout backHref="/activities">
+        <PageLayout backHref="/home">
             <div className={styles.container}>
                 <div className={styles.grid}>
                     {objects.map((item: any) => (

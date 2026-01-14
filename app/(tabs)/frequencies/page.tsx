@@ -125,7 +125,7 @@ function FrequenciesContent() {
 
 export default function FrequenciesPage() {
     return (
-        <PageLayout backHref="/frequenciesCategorySelection">
+        <PageLayout backHref="/home">
             <Suspense fallback={<div>Carregando...</div>}>
                 <FrequenciesContent />
             </Suspense>

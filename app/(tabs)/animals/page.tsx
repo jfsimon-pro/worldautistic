@@ -75,7 +75,7 @@ export default function AnimalsPage() {
     };
 
     return (
-        <PageLayout backHref="/activities">
+        <PageLayout backHref="/home">
             <div className={styles.container}>
                 <div className={styles.grid}>
                     {animals.map((item: any) => (

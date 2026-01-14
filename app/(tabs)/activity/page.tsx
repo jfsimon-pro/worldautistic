@@ -101,7 +101,7 @@ function ActivityContent() {
 
 export default function ActivityPage() {
     return (
-        <PageLayout backHref="/activities">
+        <PageLayout backHref="/home">
             <Suspense fallback={<div>Carregando...</div>}>
                 <ActivityContent />
             </Suspense>

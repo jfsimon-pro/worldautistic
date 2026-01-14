@@ -73,7 +73,7 @@ export default function FoodPage() {
     };
 
     return (
-        <PageLayout backHref="/activities">
+        <PageLayout backHref="/home">
             <div className={styles.container}>
                 <div className={styles.grid}>
                     {food.map((item: any) => (

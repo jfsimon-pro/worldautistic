@@ -6,7 +6,7 @@ import styles from '../../styles/LevelSelection.module.css';
 
 export default function NumberLevelSelectionPage() {
     return (
-        <PageLayout backHref="/activities">
+        <PageLayout backHref="/home">
             <div className={styles.container}>
                 <h1 className={styles.title}>Selecione o Nível</h1>
 

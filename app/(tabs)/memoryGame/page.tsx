@@ -110,7 +110,7 @@ export default function MemoryGamePage() {
     };
 
     return (
-        <PageLayout backHref="/games">
+        <PageLayout backHref="/home">
             <div className={styles.container}>
                 <h1 className={styles.title}>Jogo da Memória</h1>
 

@@ -75,7 +75,7 @@ export default function ColorsPage() {
     };
 
     return (
-        <PageLayout backHref="/activities">
+        <PageLayout backHref="/home">
             <div className={styles.container}>
                 <div className={styles.grid}>
                     {colors.map((item: any) => (

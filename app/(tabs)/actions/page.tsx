@@ -34,7 +34,7 @@ export default function ActionsPage() {
     };
 
     return (
-        <PageLayout backHref="/commands">
+        <PageLayout backHref="/home">
             <div className={styles.container}>
                 <div className={styles.grid}>
                     {commands.map(command => (
