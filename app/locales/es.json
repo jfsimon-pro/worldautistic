@@ -1,0 +1,48 @@
+{
+    "common": {
+        "back": "Volver",
+        "loading": "Cargando...",
+        "error": "Error",
+        "save": "Guardar",
+        "cancel": "Cancelar",
+        "logout": "Salir"
+    },
+    "login": {
+        "haveAccount": "Ya tengo una cuenta",
+        "createAccount": "Crear nueva cuenta",
+        "signInWithGoogle": "Iniciar sesión con Google"
+    },
+    "signIn": {
+        "email": "Correo electrónico",
+        "password": "Contraseña",
+        "enter": "Entrar",
+        "entering": "Entrando...",
+        "requestAccess": "Solicitar acceso",
+        "emailRequired": "Correo y contraseña son obligatorios",
+        "loginError": "Error al iniciar sesión. Inténtalo de nuevo."
+    },
+    "register": {
+        "name": "Nombre",
+        "email": "Correo electrónico",
+        "password": "Contraseña",
+        "confirmPassword": "Confirmar Contraseña",
+        "register": "Registrarse",
+        "registering": "Registrando...",
+        "alreadyHaveAccount": "Ya tengo una cuenta",
+        "nameRequired": "El nombre es obligatorio",
+        "invalidEmail": "Correo inválido",
+        "passwordMinLength": "La contraseña debe tener al menos 6 caracteres",
+        "passwordsNotMatch": "Las contraseñas no coinciden"
+    },
+    "home": {
+        "activities": "Actividades",
+        "voiceCommands": "Comandos de Voz",
+        "soundFrequencies": "Frecuencias Sonoras",
+        "games": "Juegos"
+    },
+    "settings": {
+        "title": "Configuración",
+        "language": "Idioma",
+        "logout": "Salir"
+    }
+}

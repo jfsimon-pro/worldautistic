@@ -12,12 +12,69 @@ export default function RegisterPage() {
   const [confirmEmail, setConfirmEmail] = useState('');
   const [password, setPassword] = useState('');
   const [agreeTerms, setAgreeTerms] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
-  const handleRegister = (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (fullName && email && confirmEmail && password && agreeTerms) {
-      // Logic would go here
-      router.push('/(home)');
+    setError('');
+    setSuccess('');
+
+    // Validações
+    if (!fullName || !email || !confirmEmail || !password) {
+      setError('Todos os campos são obrigatórios');
+      return;
+    }
+
+    if (email !== confirmEmail) {
+      setError('Os emails não coincidem');
+      return;
+    }
+
+    if (password.length < 6) {
+      setError('A senha deve ter pelo menos 6 caracteres');
+      return;
+    }
+
+    if (!agreeTerms) {
+      setError('Você deve aceitar os Termos de Uso');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          name: fullName,
+          email,
+          password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Erro ao criar conta');
+      }
+
+      setSuccess('Conta criada com sucesso! Redirecionando...');
+
+      // Cookies são definidos automaticamente pelo servidor
+      // Redirecionar direto para home (já está autenticado)
+      setTimeout(() => {
+        window.location.href = '/home';
+      }, 1500);
+    } catch (err: any) {
+      setError(err.message || 'Erro ao criar conta. Tente novamente.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -128,7 +185,43 @@ export default function RegisterPage() {
               <span className={styles['checkbox-text']}>Aceito os Termos de Uso</span>
             </label>
 
-            <button type="submit" className={styles['default-btn']}>Cadastrar</button>
+            {/* Mensagens de erro e sucesso */}
+            {error && (
+              <div style={{
+                padding: '1rem',
+                marginBottom: '1rem',
+                backgroundColor: '#fee',
+                border: '1px solid #fcc',
+                borderRadius: '8px',
+                color: '#c00',
+                fontSize: '0.9rem',
+              }}>
+                {error}
+              </div>
+            )}
+
+            {success && (
+              <div style={{
+                padding: '1rem',
+                marginBottom: '1rem',
+                backgroundColor: '#efe',
+                border: '1px solid #cfc',
+                borderRadius: '8px',
+                color: '#0a0',
+                fontSize: '0.9rem',
+              }}>
+                {success}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              className={styles['default-btn']}
+              disabled={loading}
+              style={{ opacity: loading ? 0.6 : 1, cursor: loading ? 'not-allowed' : 'pointer' }}
+            >
+              {loading ? 'Criando conta...' : 'Cadastrar'}
+            </button>
 
           </form>
 

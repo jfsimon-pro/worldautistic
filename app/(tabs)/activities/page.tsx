@@ -28,54 +28,7 @@ export default function ActivitiesPage() {
                     href="/activity?category=lang&level=1"
                 />
 
-                {/* Small cards row */}
-                <div className={styles.smallCardsRow}>
-                    {/* Animals */}
-                    <ActivityCard
-                        title="Animais"
-                        imageSource="/images/animals.png"
-                        backgroundColor="#8ECF99"
-                        borderColor="#4E9F62"
-                        textColor="#134D2F"
-                        href="/animals"
-                        smallButton
-                    />
-
-                    {/* Food */}
-                    <ActivityCard
-                        title="Comida"
-                        imageSource="/images/food.png"
-                        backgroundColor="#E07A5F"
-                        borderColor="#9D3C27"
-                        textColor="#3F1D14"
-                        href="/food"
-                        smallButton
-                    />
-                </div>
-
-                <div className={styles.smallCardsRow}>
-                    {/* Objects */}
-                    <ActivityCard
-                        title="Objetos"
-                        imageSource="/images/objects.png"
-                        backgroundColor="#6A4C93"
-                        borderColor="#432C64"
-                        textColor="#E0D6F5"
-                        href="/objects"
-                        smallButton
-                    />
-
-                    {/* Colors */}
-                    <ActivityCard
-                        title="Cores"
-                        imageSource="/images/colors.png"
-                        backgroundColor="#D9F99D"
-                        borderColor="#A3E635"
-                        textColor="#166534"
-                        href="/colors"
-                        smallButton
-                    />
-                </div>
+                {/* Content moved to /commands */}
             </div>
         </PageLayout>
     );

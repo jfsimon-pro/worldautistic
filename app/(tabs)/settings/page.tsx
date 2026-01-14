@@ -1,17 +1,11 @@
 'use client';
 
-import { useState } from 'react';
 import PageLayout from '../../components/PageLayout';
 import styles from '../../styles/Settings.module.css';
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function SettingsPage() {
-    const [selectedLanguage, setSelectedLanguage] = useState('pt');
-
-    const handleLanguageChange = (language: string) => {
-        setSelectedLanguage(language);
-        // TODO: Implement actual language change when i18n is set up
-        console.log(`Language changed to: ${language}`);
-    };
+    const { language, setLanguage, t } = useLanguage();
 
     const handleLogout = () => {
         // TODO: Implement actual logout functionality
@@ -23,27 +17,27 @@ export default function SettingsPage() {
     return (
         <PageLayout backHref="/home">
             <div className={styles.container}>
-                <h1 className={styles.title}>Configurações</h1>
+                <h1 className={styles.title}>{t('settings.title')}</h1>
 
                 <div className={styles.content}>
                     <div className={styles.section}>
-                        <h2 className={styles.sectionTitle}>Idioma</h2>
+                        <h2 className={styles.sectionTitle}>{t('settings.language')}</h2>
                         <div className={styles.languageButtons}>
                             <button
-                                className={`${styles.languageButton} ${selectedLanguage === 'pt' ? styles.active : ''}`}
-                                onClick={() => handleLanguageChange('pt')}
+                                className={`${styles.languageButton} ${language === 'pt' ? styles.active : ''}`}
+                                onClick={() => setLanguage('pt')}
                             >
                                 PT
                             </button>
                             <button
-                                className={`${styles.languageButton} ${selectedLanguage === 'en' ? styles.active : ''}`}
-                                onClick={() => handleLanguageChange('en')}
+                                className={`${styles.languageButton} ${language === 'en' ? styles.active : ''}`}
+                                onClick={() => setLanguage('en')}
                             >
                                 EN
                             </button>
                             <button
-                                className={`${styles.languageButton} ${selectedLanguage === 'es' ? styles.active : ''}`}
-                                onClick={() => handleLanguageChange('es')}
+                                className={`${styles.languageButton} ${language === 'es' ? styles.active : ''}`}
+                                onClick={() => setLanguage('es')}
                             >
                                 ES
                             </button>
@@ -51,7 +45,7 @@ export default function SettingsPage() {
                     </div>
 
                     <button className={styles.logoutButton} onClick={handleLogout}>
-                        Sair
+                        {t('settings.logout')}
                     </button>
                 </div>
             </div>

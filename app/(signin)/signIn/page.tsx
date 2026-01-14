@@ -2,18 +2,84 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import styles from '../../styles/Register.module.css';
+import { useTranslation } from '../../context/LanguageContext';
 
 export default function SignInPage() {
-  const router = useRouter();
+  const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSignIn = (e: React.FormEvent) => {
+  const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (email && password) {
-      router.push('/(home)');
+    setError('');
+
+    console.log('🔵 [LOGIN] Iniciando login...');
+    console.log('📧 Email:', email);
+
+    // Validações
+    if (!email || !password) {
+      console.log('❌ [LOGIN] Validação falhou: campos vazios');
+      setError(t('signIn.emailRequired'));
+      return;
+    }
+
+    setLoading(true);
+    console.log('⏳ [LOGIN] Loading = true');
+
+    try {
+      console.log('📡 [LOGIN] Enviando requisição para /api/auth/login');
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
+
+      console.log('📥 [LOGIN] Response recebido:', response.status, response.statusText);
+      const data = await response.json();
+      console.log('📦 [LOGIN] Data:', data);
+
+      if (!response.ok) {
+        console.log('❌ [LOGIN] Response não OK:', data.error);
+        throw new Error(data.error || t('signIn.loginError'));
+      }
+
+      console.log('✅ [LOGIN] Login bem-sucedido!');
+      // Buscar dados do usuário para verificar role
+      const userResponse = await fetch('/api/auth/me', {
+        credentials: 'include',
+      });
+
+      if (userResponse.ok) {
+        const userData = await userResponse.json();
+        const isAdmin = userData.user.role === 'ADMIN';
+
+        console.log('🔀 [LOGIN] Redirecionando baseado em role:', userData.user.role);
+
+        // Redirecionar baseado no role
+        if (isAdmin) {
+          window.location.href = '/admin';
+        } else {
+          window.location.href = '/home';
+        }
+      } else {
+        // Se falhar, redireciona para home por padrão
+        window.location.href = '/home';
+      }
+    } catch (err: any) {
+      console.log('💥 [LOGIN] Erro capturado:', err);
+      setError(err.message || t('signIn.loginError'));
+    } finally {
+      console.log('🏁 [LOGIN] Finally - Loading = false');
+      setLoading(false);
     }
   };
 
@@ -32,18 +98,18 @@ export default function SignInPage() {
       <div className={styles['header-container']}>
 
         {/* Back Button */}
-        <Link href="/(signin)" className={styles['header-btn']}>
+        <Link href="/" className={styles['header-btn']}>
           <svg xmlns="http://www.w3.org/2000/svg" className={styles['header-icon']} fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
         </Link>
 
         {/* Language Button */}
-        <button className={styles['header-btn']}>
+        <Link href="/settings" className={styles['header-btn']}>
           <svg xmlns="http://www.w3.org/2000/svg" className={styles['header-icon']} fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
           </svg>
-        </button>
+        </Link>
 
       </div>
 
@@ -70,7 +136,7 @@ export default function SignInPage() {
           <form onSubmit={handleSignIn} >
 
             <div className={styles['form-group']}>
-              <label className={styles['form-label']}>Email</label>
+              <label className={styles['form-label']}>{t('signIn.email')}</label>
               <input
                 type="email"
                 value={email}
@@ -80,7 +146,7 @@ export default function SignInPage() {
             </div>
 
             <div className={styles['form-group']}>
-              <label className={styles['form-label']}>Senha</label>
+              <label className={styles['form-label']}>{t('signIn.password')}</label>
               <input
                 type="password"
                 value={password}
@@ -89,14 +155,36 @@ export default function SignInPage() {
               />
             </div>
 
-            <button type="submit" className={styles['default-btn']}>Entrar</button>
+            {/* Mensagem de erro */}
+            {error && (
+              <div style={{
+                padding: '1rem',
+                marginBottom: '1rem',
+                backgroundColor: '#fee',
+                border: '1px solid #fcc',
+                borderRadius: '8px',
+                color: '#c00',
+                fontSize: '0.9rem',
+              }}>
+                {error}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              className={styles['default-btn']}
+              disabled={loading}
+              style={{ opacity: loading ? 0.6 : 1, cursor: loading ? 'not-allowed' : 'pointer' }}
+            >
+              {loading ? t('signIn.entering') : t('signIn.enter')}
+            </button>
 
           </form>
 
           <div style={{ marginTop: '0.5rem', textAlign: 'center' }}>
-            <Link href="/(signin)/register">
+            <Link href="/register">
               <span className={styles['checkbox-text']} style={{ fontWeight: 500, textDecoration: 'underline' }}>
-                Solicitar acesso
+                {t('signIn.requestAccess')}
               </span>
             </Link>
           </div>

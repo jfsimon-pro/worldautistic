@@ -1,0 +1,48 @@
+{
+    "common": {
+        "back": "Back",
+        "loading": "Loading...",
+        "error": "Error",
+        "save": "Save",
+        "cancel": "Cancel",
+        "logout": "Logout"
+    },
+    "login": {
+        "haveAccount": "I already have an account",
+        "createAccount": "Create new account",
+        "signInWithGoogle": "Sign in with Google"
+    },
+    "signIn": {
+        "email": "Email",
+        "password": "Password",
+        "enter": "Sign In",
+        "entering": "Signing in...",
+        "requestAccess": "Request access",
+        "emailRequired": "Email and password are required",
+        "loginError": "Login failed. Please try again."
+    },
+    "register": {
+        "name": "Name",
+        "email": "Email",
+        "password": "Password",
+        "confirmPassword": "Confirm Password",
+        "register": "Register",
+        "registering": "Registering...",
+        "alreadyHaveAccount": "I already have an account",
+        "nameRequired": "Name is required",
+        "invalidEmail": "Invalid email",
+        "passwordMinLength": "Password must be at least 6 characters",
+        "passwordsNotMatch": "Passwords do not match"
+    },
+    "home": {
+        "activities": "Activities",
+        "voiceCommands": "Voice Commands",
+        "soundFrequencies": "Sound Frequencies",
+        "games": "Games"
+    },
+    "settings": {
+        "title": "Settings",
+        "language": "Language",
+        "logout": "Logout"
+    }
+}

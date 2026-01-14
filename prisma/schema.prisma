@@ -1,0 +1,516 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// 👤 AUTENTICAÇÃO E USUÁRIOS
+// ============================================
+
+enum Role {
+  ADMIN
+  USER
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  passwordHash  String
+  name          String
+  role          Role      @default(USER)
+  avatar        String?   // URL da foto de perfil
+  dateOfBirth   DateTime?
+  
+  // Configurações do usuário
+  language      String    @default("pt") // pt, en, es
+  soundEnabled  Boolean   @default(true)
+  
+  // Progressos e atividades
+  activityProgress    ActivityProgress[]
+  gameProgress        GameProgress[]
+  userStreaks         UserStreak[]
+  achievements        UserAchievement[]
+  refreshTokens       RefreshToken[]
+  
+  // Timestamps
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  lastLoginAt   DateTime?
+
+  @@index([email])
+  @@index([role])
+}
+
+// Refresh Tokens para autenticação JWT
+model RefreshToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  
+  @@index([userId])
+  @@index([token])
+  @@index([expiresAt])
+}
+
+// ============================================
+// 🎯 SISTEMA DE CONQUISTAS (ACHIEVEMENTS)
+// ============================================
+
+enum AchievementType {
+  ACTIVITY_COMPLETION
+  STREAK
+  PERFECT_SCORE
+  TIME_BASED
+  CATEGORY_MASTER
+  SPECIAL
+}
+
+model Achievement {
+  id            String              @id @default(cuid())
+  name          String
+  description   String
+  icon          String              // emoji ou URL da imagem
+  type          AchievementType
+  criteria      Json                // Critérios flexíveis em JSON
+  points        Int                 @default(0)
+  
+  // Traduções
+  nameEn        String?
+  nameEs        String?
+  descriptionEn String?
+  descriptionEs String?
+  
+  // Relações
+  userAchievements UserAchievement[]
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([type])
+}
+
+model UserAchievement {
+  id            String      @id @default(cuid())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievementId String
+  achievement   Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+  
+  unlockedAt    DateTime    @default(now())
+  
+  @@unique([userId, achievementId])
+  @@index([userId])
+}
+
+// ============================================
+// 📚 CONTEÚDO - CARDS INTERATIVOS
+// ============================================
+
+enum CardCategory {
+  ANIMALS
+  FOOD
+  OBJECTS
+  COLORS
+  COMMANDS
+}
+
+model Card {
+  id            String        @id @default(cuid())
+  category      CardCategory
+  identifier    String        @unique // e.g., "cat", "elephant"
+  
+  // Dados multilíngue
+  namePt        String
+  nameEn        String
+  nameEs        String
+  
+  // Recursos visuais e sonoros
+  imageUrl      String        // /images/animals/cat.png
+  audioPt       String?       // /audio/pt/animals/Cat_.mp3
+  audioEn       String?
+  audioEs       String?
+  
+  // Estilização
+  color         String        // #AAD3E9
+  borderColor   String        // #56A9D4
+  textColor     String?       // #090889
+  
+  // Metadados
+  order         Int           @default(0)
+  isActive      Boolean       @default(true)
+  
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([category])
+  @@index([isActive])
+}
+
+// ============================================
+// ✏️ ATIVIDADES EDUCACIONAIS
+// ============================================
+
+enum ActivityType {
+  MATH_ADDITION
+  MATH_SUBTRACTION
+  MATH_MULTIPLICATION
+  MATH_DIVISION
+  MATH_COMPARISON
+  MATH_SEQUENCES
+  LANG_LETTER_RECOGNITION
+  LANG_WORD_BUILDING
+  LANG_READING_COMPREHENSION
+}
+
+enum DifficultyLevel {
+  LEVEL_1
+  LEVEL_2
+  LEVEL_3
+}
+
+model Activity {
+  id            String            @id @default(cuid())
+  type          ActivityType
+  level         DifficultyLevel
+  componentName String            // "MATH01", "LANG03"
+  
+  // Descrição
+  title         String
+  description   String?
+  
+  // Traduções
+  titleEn       String?
+  titleEs       String?
+  descriptionEn String?
+  descriptionEs String?
+  
+  // Configuração da atividade
+  config        Json?             // Configurações específicas da atividade
+  
+  // Metadados
+  estimatedTime Int?              // tempo estimado em segundos
+  maxAttempts   Int               @default(5)
+  isActive      Boolean           @default(true)
+  
+  // Relações
+  progress      ActivityProgress[]
+  
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  @@index([type])
+  @@index([level])
+  @@index([isActive])
+}
+
+model ActivityProgress {
+  id                String          @id @default(cuid())
+  userId            String
+  user              User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  activityId        String
+  activity          Activity        @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  
+  // Métricas de desempenho
+  attempts          Int             @default(0)
+  correctAnswers    Int             @default(0)
+  incorrectAnswers  Int             @default(0)
+  completionTime    Int?            // tempo em segundos
+  score             Float           @default(0) // percentual 0-100
+  
+  // Status
+  isCompleted       Boolean         @default(false)
+  lastAttemptAt     DateTime        @default(now())
+  completedAt       DateTime?
+  
+  // Dados adicionais
+  metadata          Json?           // Dados específicos da atividade
+  
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  @@unique([userId, activityId, lastAttemptAt])
+  @@index([userId])
+  @@index([activityId])
+  @@index([isCompleted])
+}
+
+// ============================================
+// 🎮 JOGOS
+// ============================================
+
+enum GameType {
+  MEMORY_GAME
+  PUZZLE
+  MATCHING
+  SORTING
+}
+
+model Game {
+  id            String        @id @default(cuid())
+  name          String
+  type          GameType
+  description   String?
+  
+  // Traduções
+  nameEn        String?
+  nameEs        String?
+  descriptionEn String?
+  descriptionEs String?
+  
+  // Configuração
+  config        Json?         // Configurações do jogo
+  imageUrl      String?       // Thumbnail do jogo
+  
+  // Metadados
+  minAge        Int?
+  maxDuration   Int?          // tempo máximo em segundos
+  isActive      Boolean       @default(true)
+  isDraft       Boolean       @default(false)
+  
+  // Relações
+  progress      GameProgress[]
+  
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([type])
+  @@index([isActive])
+}
+
+model GameProgress {
+  id              String    @id @default(cuid())
+  userId          String
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  gameId          String
+  game            Game      @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  
+  // Métricas
+  attempts        Int       @default(0)
+  wins            Int       @default(0)
+  losses          Int       @default(0)
+  bestScore       Int       @default(0)
+  bestTime        Int?      // melhor tempo em segundos
+  
+  // Status
+  lastPlayedAt    DateTime  @default(now())
+  
+  // Dados adicionais
+  metadata        Json?
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@unique([userId, gameId])
+  @@index([userId])
+  @@index([gameId])
+}
+
+// ============================================
+// 🎵 FREQUÊNCIAS SONORAS
+// ============================================
+
+model FrequencyCategory {
+  id            String      @id @default(cuid())
+  name          String      @unique
+  description   String?
+  
+  // Traduções
+  nameEn        String?
+  nameEs        String?
+  descriptionEn String?
+  descriptionEs String?
+  
+  // Cloudinary folder
+  assetFolder   String      // e.g., "relaxamento", "foco"
+  
+  // Metadados
+  icon          String?     // emoji ou URL
+  order         Int         @default(0)
+  isActive      Boolean     @default(true)
+  
+  // Relações
+  frequencies   Frequency[]
+  
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@index([isActive])
+}
+
+model Frequency {
+  id            String              @id @default(cuid())
+  categoryId    String
+  category      FrequencyCategory   @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  
+  // Informações da frequência
+  name          String
+  description   String?
+  frequency     String              // e.g., "432Hz", "528Hz"
+  
+  // Cloudinary
+  publicId      String              @unique
+  secureUrl     String
+  
+  // Metadados
+  duration      Int?                // duração em segundos
+  order         Int                 @default(0)
+  isActive      Boolean             @default(true)
+  
+  // Estatísticas de uso
+  playCount     Int                 @default(0)
+  
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+
+  @@index([categoryId])
+  @@index([isActive])
+}
+
+// ============================================
+// 📖 HISTÓRIAS E ROTINAS
+// ============================================
+
+enum ContentType {
+  STORY
+  ROUTINE
+  SOCIAL_SCRIPT
+}
+
+model Story {
+  id            String        @id @default(cuid())
+  type          ContentType
+  title         String
+  content       String        @db.Text // Conteúdo em markdown ou HTML
+  
+  // Traduções
+  titleEn       String?
+  titleEs       String?
+  contentEn     String?       @db.Text
+  contentEs     String?       @db.Text
+  
+  // Recursos visuais
+  coverImage    String?
+  images        Json?         // Array de URLs de imagens
+  
+  // Metadados
+  targetAge     String?       // "3-5", "6-8", etc.
+  tags          String[]      // ["rotina matinal", "escola"]
+  estimatedTime Int?          // tempo estimado de leitura em minutos
+  
+  // Status
+  isActive      Boolean       @default(true)
+  isDraft       Boolean       @default(false)
+  publishedAt   DateTime?
+  
+  // Autor
+  authorId      String?
+  
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([type])
+  @@index([isActive])
+  @@index([isDraft])
+}
+
+// ============================================
+// 📊 RELATÓRIOS E ANALYTICS
+// ============================================
+
+model UserStreak {
+  id            String    @id @default(cuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Streak data
+  currentStreak Int       @default(0)
+  longestStreak Int       @default(0)
+  lastActiveDate DateTime @default(now())
+  
+  updatedAt     DateTime  @updatedAt
+
+  @@unique([userId])
+  @@index([userId])
+}
+
+model DailyActivity {
+  id            String    @id @default(cuid())
+  userId        String
+  date          DateTime  @db.Date
+  
+  // Métricas diárias
+  activitiesCompleted   Int @default(0)
+  gamesPlayed           Int @default(0)
+  totalTimeSpent        Int @default(0) // em segundos
+  correctAnswers        Int @default(0)
+  incorrectAnswers      Int @default(0)
+  
+  // Breakdown por categoria
+  mathActivities        Int @default(0)
+  langActivities        Int @default(0)
+  cardsViewed           Int @default(0)
+  frequenciesListened   Int @default(0)
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@unique([userId, date])
+  @@index([userId])
+  @@index([date])
+}
+
+// ============================================
+// ⚙️ CONFIGURAÇÕES DO SISTEMA
+// ============================================
+
+model AppSettings {
+  id            String    @id @default(cuid())
+  key           String    @unique
+  value         Json
+  description   String?
+  
+  updatedAt     DateTime  @updatedAt
+  updatedBy     String?
+}
+
+// ============================================
+// 📢 NOTIFICAÇÕES
+// ============================================
+
+enum NotificationType {
+  ACHIEVEMENT
+  REMINDER
+  PROGRESS_REPORT
+  SYSTEM
+}
+
+model Notification {
+  id            String            @id @default(cuid())
+  userId        String
+  type          NotificationType
+  
+  // Conteúdo
+  title         String
+  message       String
+  data          Json?             // Dados adicionais
+  
+  // Status
+  isRead        Boolean           @default(false)
+  readAt        DateTime?
+  
+  createdAt     DateTime          @default(now())
+
+  @@index([userId])
+  @@index([isRead])
+  @@index([createdAt])
+}

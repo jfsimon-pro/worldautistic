@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import LogoutButton from './LogoutButton';
 import styles from '../styles/PageLayout.module.css';
 
 interface PageLayoutProps {
@@ -11,6 +12,8 @@ interface PageLayoutProps {
 export default function PageLayout({ children, backHref = '/home' }: PageLayoutProps) {
     return (
         <div className={styles.container}>
+            {/* Botão de Logout */}
+            <LogoutButton />
             {/* Background */}
             <div className={styles['background-container']}>
                 <img src="/images/background.png" alt="Background" className={styles['background-image']} />
