@@ -35,7 +35,7 @@ function shuffleArray<T>(array: T[]): T[] {
 
 function generateCards(): Card[] {
     const selectedItems = shuffleArray(ITEMS).slice(0, 8);
-    const cards = selectedItems.flatMap((item, index) => [
+    const cards = selectedItems.flatMap((item) => [
         { ...item, id: `${item.id}-1`, isRevealed: false, isMatched: false },
         { ...item, id: `${item.id}-2`, isRevealed: false, isMatched: false },
     ]);
@@ -69,8 +69,6 @@ export default function MemoryGamePage() {
         if (selectedCards.length === 2) {
             setIsProcessing(true);
             const [firstId, secondId] = selectedCards;
-            const firstCard = cards.find(c => c.id === firstId);
-            const secondCard = cards.find(c => c.id === secondId);
 
             // Check if images match (same base id)
             const firstBaseId = firstId.replace(/-\d$/, '');

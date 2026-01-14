@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Verificar refresh token
-        const payload = verifyRefreshToken(oldRefreshToken);
+        const payload = await verifyRefreshToken(oldRefreshToken);
 
         if (!payload) {
             return NextResponse.json(
@@ -39,8 +39,8 @@ export async function POST(request: NextRequest) {
         }
 
         // Gerar novos tokens
-        const newAccessToken = generateAccessToken(tokenRecord.user.id, tokenRecord.user.role);
-        const newRefreshToken = generateRefreshToken(tokenRecord.user.id);
+        const newAccessToken = await generateAccessToken(tokenRecord.user.id, tokenRecord.user.role);
+        const newRefreshToken = await generateRefreshToken(tokenRecord.user.id);
 
         // Substituir refresh token no banco (rotação de tokens)
         await prisma.$transaction([

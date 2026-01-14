@@ -5,16 +5,6 @@ import PageLayout from '../../components/PageLayout';
 import ItemCard from '../../components/ItemCard';
 import styles from '../../styles/ItemGrid.module.css';
 
-interface ObjectItem {
-    id: string;
-    pt: string;
-    en: string;
-    es: string;
-    color: string;
-    borderColor: string;
-    textColor?: string;
-}
-
 export default function ObjectsPage() {
     const [objects, setObjects] = useState<any[]>([]);
 

@@ -20,7 +20,7 @@ interface User {
 }
 
 export default function UsersManagement() {
-    const { user: currentUser, loading, isAdmin } = useAuth();
+    const { loading, isAdmin } = useAuth();
     const router = useRouter();
     const [users, setUsers] = useState<User[]>([]);
     const [loadingUsers, setLoadingUsers] = useState(true);

@@ -5,16 +5,6 @@ import PageLayout from '../../components/PageLayout';
 import ItemCard from '../../components/ItemCard';
 import styles from '../../styles/ItemGrid.module.css';
 
-interface Animal {
-    id: string;
-    pt: string;
-    en: string;
-    es: string;
-    color: string;
-    borderColor: string;
-    textColor?: string;
-}
-
 export default function AnimalsPage() {
     const [animals, setAnimals] = useState<any[]>([]);
 

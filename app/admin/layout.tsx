@@ -2,11 +2,9 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
-    const [isSidebarOpen, setSidebarOpen] = useState(true);
 
     const menuItems = [
         { name: 'Dashboard', href: '/admin', icon: '📊' },

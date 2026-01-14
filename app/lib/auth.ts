@@ -32,7 +32,7 @@ export async function generateRefreshToken(userId: string): Promise<string> {
 export async function verifyAccessToken(token: string): Promise<TokenPayload | null> {
     try {
         const { payload } = await jwtVerify(token, JWT_SECRET);
-        return payload as TokenPayload;
+        return payload as unknown as TokenPayload;
     } catch (error) {
         return null;
     }
@@ -41,7 +41,7 @@ export async function verifyAccessToken(token: string): Promise<TokenPayload | n
 export async function verifyRefreshToken(token: string): Promise<{ userId: string } | null> {
     try {
         const { payload } = await jwtVerify(token, JWT_SECRET);
-        return payload as { userId: string };
+        return payload as unknown as { userId: string };
     } catch (error) {
         return null;
     }
