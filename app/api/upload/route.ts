@@ -48,8 +48,8 @@ export async function POST(request: NextRequest) {
         // Salvar arquivo
         await writeFile(filepath, buffer);
 
-        // Retornar URL pública
-        const publicUrl = `/uploads/${folder}/${filename}`;
+        // Retornar URL pública (usando rota API que serve dinamicamente)
+        const publicUrl = `/api/uploads/${folder}/${filename}`;
 
         return NextResponse.json({ url: publicUrl });
     } catch (error) {
