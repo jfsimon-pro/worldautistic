@@ -10,7 +10,8 @@
     "login": {
         "haveAccount": "I already have an account",
         "createAccount": "Create new account",
-        "signInWithGoogle": "Sign in with Google"
+        "signInWithGoogle": "Sign in with Google",
+        "installApp": "Install APP"
     },
     "signIn": {
         "email": "Email",
