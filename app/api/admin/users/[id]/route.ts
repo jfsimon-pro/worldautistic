@@ -5,7 +5,7 @@ import { getAccessTokenFromRequest } from '@/app/lib/cookies';
 
 export async function PATCH(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         // Verificar autenticação
@@ -19,12 +19,13 @@ export async function PATCH(
             return NextResponse.json({ error: 'Acesso negado' }, { status: 403 });
         }
 
+        const { id } = await params;
         const body = await request.json();
         const { name, role } = body;
 
         // Atualizar usuário
         const user = await prisma.user.update({
-            where: { id: params.id },
+            where: { id },
             data: {
                 ...(name && { name }),
                 ...(role && { role }),
