@@ -201,3 +201,94 @@
 .install-btn:active {
     transform: translateY(0);
 }
+
+/* iOS Instructions Modal */
+.ios-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+}
+
+.ios-modal {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    max-width: 320px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.ios-modal-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin: 0 0 1.5rem 0;
+}
+
+.ios-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.ios-step {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-align: left;
+    padding: 0.75rem;
+    background: #f5f7fa;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    color: #333;
+}
+
+.ios-step-number {
+    width: 28px;
+    height: 28px;
+    background: #3b82f6;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.ios-step svg {
+    margin-left: auto;
+    color: #3b82f6;
+    flex-shrink: 0;
+}
+
+.ios-modal-close {
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.ios-modal-close:hover {
+    transform: scale(1.02);
+}
+
+.ios-modal-close:active {
+    transform: scale(0.98);
+}
