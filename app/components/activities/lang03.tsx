@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useActivityContext } from "../ActivityContext";
+import { useLanguage } from "../../context/LanguageContext";
+import { getLocalizedName, Language } from "../../utils/i18nHelpers";
 import styles from './ActivityStyles.module.css';
 
 // Import data
@@ -27,15 +29,15 @@ const shuffleArray = <T,>(array: T[]): T[] => {
     return array;
 };
 
-const createLang03 = (category: string) => {
+const createLang03 = (category: string, language: string) => {
     const selectedData = questionData[category];
     const correctItem = getRandomItem(selectedData);
-    const answerWord = correctItem.pt;
+    const answerWord = getLocalizedName(correctItem, language as Language);
     const wordArray = answerWord.split("");
 
     const missingCount = Math.random() < 0.5 ? 2 : 3;
     const missingIndices: number[] = [];
-    while (missingIndices.length < missingCount) {
+    while (missingIndices.length < missingCount && missingIndices.length < wordArray.length) {
         const randomIndex = Math.floor(Math.random() * wordArray.length);
         if (!missingIndices.includes(randomIndex)) {
             missingIndices.push(randomIndex);
@@ -47,7 +49,7 @@ const createLang03 = (category: string) => {
     );
 
     const correctAnswers = missingIndices
-        .map((index) => ({ index, letter: wordArray[index] }))
+        .map((index) => ({ index, letter: wordArray[index].toLowerCase() }))
         .sort((a, b) => a.index - b.index);
 
     const alphabet = "abcdefghijklmnopqrstuvwxyz";
@@ -55,7 +57,7 @@ const createLang03 = (category: string) => {
     while (wrongOptions.length < 8 - correctAnswers.length) {
         const randomLetter = alphabet[Math.floor(Math.random() * alphabet.length)];
         if (
-            !correctAnswers.some((answer) => answer.letter === randomLetter) &&
+            !correctAnswers.some((answer) => answer.letter.toLowerCase() === randomLetter) &&
             !wrongOptions.includes(randomLetter)
         ) {
             wrongOptions.push(randomLetter);
@@ -79,15 +81,16 @@ const createLang03 = (category: string) => {
 
 export default function LANG03() {
     const { setResult } = useActivityContext();
+    const { language, t } = useLanguage();
     const categories = Object.keys(questionData);
     const category = getRandomItem(categories);
-    const [activity, setActivity] = useState(createLang03(category));
+    const [activity, setActivity] = useState(() => createLang03(category, language));
     const [disabledLetters, setDisabledLetters] = useState<number[]>([]);
 
     const handleAnswer = (selectedLetter: string, index: number) => {
         const { currentStep, answers, sequence } = activity;
 
-        if (selectedLetter === answers[currentStep].letter) {
+        if (selectedLetter.toLowerCase() === answers[currentStep].letter.toLowerCase()) {
             const updatedSequence = [...sequence];
             updatedSequence[answers[currentStep].index] = selectedLetter;
 
@@ -109,11 +112,11 @@ export default function LANG03() {
 
     return (
         <div className={styles.container}>
-            <p className={styles.instructionText}>Complete a palavra</p>
+            <p className={styles.instructionText}>{t('activityExercises.completeTheWord')}</p>
 
             <img
                 src={`/images/${activity.category}/${activity.correctItem.id}.png`}
-                alt={activity.correctItem.pt}
+                alt={getLocalizedName(activity.correctItem, language as Language)}
                 className={styles.animalImage}
             />
 
@@ -136,7 +139,7 @@ export default function LANG03() {
                         onClick={() => handleAnswer(letter, index)}
                         disabled={
                             disabledLetters.includes(index) ||
-                            letter !== activity.answers[activity.currentStep]?.letter
+                            letter.toLowerCase() !== activity.answers[activity.currentStep]?.letter.toLowerCase()
                         }
                     >
                         {letter}

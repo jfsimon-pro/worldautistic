@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useActivityContext } from "../ActivityContext";
+import { useLanguage } from "../../context/LanguageContext";
+import { getLocalizedName, Language, AudioFileFormat } from "../../utils/i18nHelpers";
 import styles from './ActivityStyles.module.css';
 
 // Import data
@@ -13,6 +15,13 @@ const questionData: Record<string, any[]> = {
     animals: ANIMALS,
     food: FOOD,
     objects: OBJECTS,
+};
+
+// Audio format per category
+const categoryAudioFormat: Record<string, AudioFileFormat> = {
+    animals: 'capitalize',
+    food: 'capitalize',
+    objects: 'lowercase',
 };
 
 const getRandomItem = <T,>(array: T[]): T => {
@@ -46,14 +55,22 @@ const createLang01 = (category: string) => {
     };
 };
 
-const getAudioPath = (category: string, id: string): string => {
-    const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
-    const audioFileName = id.split('_').map(capitalize).join('_');
-    return `/audio/pt/${category}/${audioFileName}_.mp3`;
+const getAudioPath = (category: string, id: string, language: string): string => {
+    const format = categoryAudioFormat[category] || 'capitalize';
+
+    if (format === 'capitalize') {
+        const audioFileName = id.split('_').map((word: string) =>
+            word.charAt(0).toUpperCase() + word.slice(1)
+        ).join('_');
+        return `/audio/${language}/${category}/${audioFileName}_.mp3`;
+    }
+
+    return `/audio/${language}/${category}/${id}_.mp3`;
 };
 
 export default function LANG01() {
     const { setResult } = useActivityContext();
+    const { language, t } = useLanguage();
     const categories = Object.keys(questionData);
     const category = getRandomItem(categories);
     const [activity] = useState(createLang01(category));
@@ -61,7 +78,7 @@ export default function LANG01() {
 
     const playSound = () => {
         setIsPlaying(true);
-        const audioPath = getAudioPath(activity.category, activity.correctItem.id);
+        const audioPath = getAudioPath(activity.category, activity.correctItem.id, language);
         const audio = new Audio(audioPath);
         audio.volume = 0.5;
 
@@ -88,13 +105,15 @@ export default function LANG01() {
 
     return (
         <div className={styles.container}>
-            <p className={styles.instructionText}>Clique na imagem que você ouviu</p>
+            <p className={styles.instructionText}>{t('activityExercises.clickImageYouHeard')}</p>
 
             <button
                 className={`${styles.highlightContainer} ${isPlaying ? styles.pulsing : ''}`}
                 onClick={playSound}
             >
-                <span className={styles.highlightText}>{activity.correctItem.pt}</span>
+                <span className={styles.highlightText}>
+                    {getLocalizedName(activity.correctItem, language as Language)}
+                </span>
             </button>
 
             <div className={styles.imageOptionsGrid}>
@@ -106,7 +125,7 @@ export default function LANG01() {
                     >
                         <img
                             src={`/images/${activity.category}/${option.id}.png`}
-                            alt={option.pt}
+                            alt={getLocalizedName(option, language as Language)}
                             className={styles.optionImage}
                         />
                     </button>

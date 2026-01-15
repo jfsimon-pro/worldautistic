@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useActivityContext } from "../ActivityContext";
+import { useLanguage } from "../../context/LanguageContext";
+import { getLocalizedName, Language } from "../../utils/i18nHelpers";
 import styles from './ActivityStyles.module.css';
 
 // Import data
@@ -33,6 +35,7 @@ const createMath03 = () => {
 
 export default function MATH03() {
     const { setResult } = useActivityContext();
+    const { language, t } = useLanguage();
     const [activity] = useState(createMath03());
 
     const handleAnswer = (selectedNumber: number) => {
@@ -42,12 +45,12 @@ export default function MATH03() {
 
     return (
         <div className={styles.container}>
-            <p className={styles.instructionText}>Quantas patas tem esse animal?</p>
+            <p className={styles.instructionText}>{t('activityExercises.howManyLegs')}</p>
 
             <div className={styles.imageRow}>
                 <img
                     src={`/images/animals/${activity.answer.id}.png`}
-                    alt={activity.answer.pt || activity.answer.id}
+                    alt={getLocalizedName(activity.answer, language as Language)}
                     className={styles.animalImage}
                 />
             </div>

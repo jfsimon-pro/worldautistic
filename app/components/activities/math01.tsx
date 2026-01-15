@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useActivityContext } from "../ActivityContext";
+import { useLanguage } from "../../context/LanguageContext";
+import { Language } from "../../utils/i18nHelpers";
 import styles from './ActivityStyles.module.css';
 
 // Map numbers to audio file names
@@ -41,6 +43,7 @@ function createMath01() {
 
 export default function MATH01() {
     const { setResult } = useActivityContext();
+    const { language, t } = useLanguage();
     const [activity] = useState(createMath01());
     const [isPlaying, setIsPlaying] = useState(false);
     const [hasPlayedOnce, setHasPlayedOnce] = useState(false);
@@ -48,7 +51,7 @@ export default function MATH01() {
     const playSound = () => {
         setIsPlaying(true);
         const audioFileName = numberToAudioFile[activity.answer];
-        const audio = new Audio(`/audio/pt/numbers/${audioFileName}.mp3`);
+        const audio = new Audio(`/audio/${language}/numbers/${audioFileName}.mp3`);
         audio.volume = 0.5;
 
         audio.play()
@@ -84,9 +87,9 @@ export default function MATH01() {
                 <img src="/images/sound.png" alt="Som" className={styles.soundIcon} />
             </button>
 
-            <p className={styles.instructionText}>Qual número você ouviu?</p>
+            <p className={styles.instructionText}>{t('activityExercises.whatNumberDidYouHear')}</p>
             <p className={styles.subText}>
-                {hasPlayedOnce ? 'Toque no ícone para ouvir novamente' : 'Aguarde o áudio...'}
+                {hasPlayedOnce ? t('activityExercises.tapIconToHearAgain') : t('activityExercises.waitingForAudio')}
             </p>
 
             <div className={styles.optionsGrid}>

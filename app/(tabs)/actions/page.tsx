@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import PageLayout from '../../components/PageLayout';
 import ItemCard from '../../components/ItemCard';
 import styles from '../../styles/ItemGrid.module.css';
+import { useLanguage } from '../../context/LanguageContext';
+import { getLocalizedName, playItemAudio, Language } from '../../utils/i18nHelpers';
 
 interface Command {
     id: string;
@@ -15,6 +17,7 @@ interface Command {
 }
 
 export default function ActionsPage() {
+    const { language } = useLanguage();
     const [commands, setCommands] = useState<Command[]>([]);
 
     useEffect(() => {
@@ -24,13 +27,8 @@ export default function ActionsPage() {
             .catch(err => console.error('Error loading commands:', err));
     }, []);
 
-    const playSound = (id: string) => {
-        // Audio files are capitalized with underscore suffix (e.g., "Let_s_go_.mp3")
-        const audioFileName = id.split('_')
-            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-            .join('_');
-        const audio = new Audio(`/audio/pt/commands/${audioFileName}_.mp3`);
-        audio.play().catch(err => console.log('Audio not available:', err));
+    const handlePress = (item: Command) => {
+        playItemAudio(item, language as Language, 'commands', 'capitalize');
     };
 
     return (
@@ -40,11 +38,11 @@ export default function ActionsPage() {
                     {commands.map(command => (
                         <ItemCard
                             key={command.id}
-                            title={command.pt}
+                            title={getLocalizedName(command, language as Language)}
                             imageSource={`/images/commands/${command.id}.png`}
                             backgroundColor={command.color}
                             borderColor={command.borderColor}
-                            onPress={() => playSound(command.id)}
+                            onPress={() => handlePress(command)}
                         />
                     ))}
                 </div>

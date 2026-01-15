@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useActivityContext } from "../ActivityContext";
+import { useLanguage } from "../../context/LanguageContext";
 import styles from './ActivityStyles.module.css';
 
 const createMath06 = () => {
@@ -34,6 +35,7 @@ const createMath06 = () => {
 
 export default function MATH06() {
     const { setResult } = useActivityContext();
+    const { t } = useLanguage();
     const [activity] = useState(createMath06());
 
     const handleAnswer = (isCorrect: boolean) => {
@@ -42,7 +44,7 @@ export default function MATH06() {
 
     return (
         <div className={styles.container}>
-            <p className={styles.instructionText}>Qual número está faltando?</p>
+            <p className={styles.instructionText}>{t('activityExercises.whichNumberIsMissing')}</p>
 
             <div className={styles.sequenceRow}>
                 {activity.sequence.map((item, index) => (

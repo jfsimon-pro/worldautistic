@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef } from "react";
 import styles from '../styles/AnswerModal.module.css';
+import { useLanguage } from "../context/LanguageContext";
 
 interface AnswerModalProps {
     result: "correct" | "incorrect" | null;
@@ -9,6 +10,7 @@ interface AnswerModalProps {
 }
 
 const AnswerModal: React.FC<AnswerModalProps> = ({ result, handleModalClose }) => {
+    const { t } = useLanguage();
     const correctSoundRef = useRef<HTMLAudioElement | null>(null);
     const incorrectSoundRef = useRef<HTMLAudioElement | null>(null);
 
@@ -34,21 +36,21 @@ const AnswerModal: React.FC<AnswerModalProps> = ({ result, handleModalClose }) =
 
             <div className={styles.modal}>
                 <p className={styles.modalText}>
-                    {isCorrect ? "Parabéns!" : "Ops!"}
+                    {isCorrect ? t('feedback.congratulations') : t('feedback.ops')}
                 </p>
 
                 <img
                     src={isCorrect ? "/images/check.png" : "/images/error.png"}
-                    alt={isCorrect ? "Correto" : "Incorreto"}
+                    alt={isCorrect ? t('feedback.correct') : t('feedback.incorrect')}
                     className={styles.logo}
                 />
 
                 <p className={styles.modalText}>
-                    {isCorrect ? "Você acertou!" : "Tente novamente!"}
+                    {isCorrect ? t('feedback.correct') : t('feedback.incorrect')}
                 </p>
 
                 <button className={styles.button} onClick={handleModalClose}>
-                    {isCorrect ? "Próximo" : "Tentar novamente"}
+                    {isCorrect ? t('feedback.next') : t('feedback.tryAgain')}
                 </button>
             </div>
         </div>

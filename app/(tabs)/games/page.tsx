@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import PageLayout from '../../components/PageLayout';
 import styles from '../../styles/Games.module.css';
+import { useTranslation } from '../../context/LanguageContext';
 
 interface GameCardProps {
     title: string;
@@ -11,9 +12,10 @@ interface GameCardProps {
     borderColor: string;
     href?: string;
     disabled?: boolean;
+    comingSoonText?: string;
 }
 
-function GameCard({ title, imageSource, backgroundColor, borderColor, href, disabled }: GameCardProps) {
+function GameCard({ title, imageSource, backgroundColor, borderColor, href, disabled, comingSoonText }: GameCardProps) {
     const cardContent = (
         <div
             className={`${styles.card} ${disabled ? styles.disabled : ''}`}
@@ -23,7 +25,7 @@ function GameCard({ title, imageSource, backgroundColor, borderColor, href, disa
                 <img src={imageSource} alt={title} className={styles.image} />
             </div>
             <div className={styles.title}>{title}</div>
-            {disabled && <div className={styles.soonBadge}>Em breve</div>}
+            {disabled && <div className={styles.soonBadge}>{comingSoonText}</div>}
         </div>
     );
 
@@ -35,37 +37,42 @@ function GameCard({ title, imageSource, backgroundColor, borderColor, href, disa
 }
 
 export default function GamesPage() {
+    const { t } = useTranslation();
+
     return (
         <PageLayout backHref="/home">
             <div className={styles.container}>
                 <div className={styles.grid}>
                     <GameCard
-                        title="Jogo da Memória"
+                        title={t('games.memoryGame')}
                         imageSource="/images/memory-game.png"
                         backgroundColor="#EB4335"
                         borderColor="#B22418"
                         href="/memoryGame"
                     />
                     <GameCard
-                        title="Jogo 2"
+                        title={t('games.game2')}
                         imageSource="/images/spaceman-game.png"
                         backgroundColor="#B642DF"
                         borderColor="#682B7D"
                         disabled
+                        comingSoonText={t('games.comingSoon')}
                     />
                     <GameCard
-                        title="Jogo 3"
+                        title={t('games.game3')}
                         imageSource="/images/spaceman-game.png"
                         backgroundColor="#F67C41"
                         borderColor="#D76900"
                         disabled
+                        comingSoonText={t('games.comingSoon')}
                     />
                     <GameCard
-                        title="Jogo 4"
+                        title={t('games.game4')}
                         imageSource="/images/spaceman-game.png"
                         backgroundColor="#34A853"
                         borderColor="#2B753F"
                         disabled
+                        comingSoonText={t('games.comingSoon')}
                     />
                 </div>
             </div>

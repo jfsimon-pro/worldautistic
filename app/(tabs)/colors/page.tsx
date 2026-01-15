@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import PageLayout from '../../components/PageLayout';
 import ItemCard from '../../components/ItemCard';
 import styles from '../../styles/ItemGrid.module.css';
+import { useLanguage } from '../../context/LanguageContext';
+import { getLocalizedName, playItemAudio, Language } from '../../utils/i18nHelpers';
 
 interface ColorItem {
     id: string;
@@ -16,6 +18,7 @@ interface ColorItem {
 }
 
 export default function ColorsPage() {
+    const { language } = useLanguage();
     const [colors, setColors] = useState<ColorItem[]>([]);
 
     useEffect(() => {
@@ -46,32 +49,8 @@ export default function ColorsPage() {
         fetchColors();
     }, []);
 
-    const playSound = (item: any) => {
-        // 1. Tenta áudio do banco (se houver url salva)
-        if (item.audioPt || item.audioUrlPt) {
-            const audio = new Audio(item.audioPt || item.audioUrlPt);
-            audio.play().catch(e => console.log('Audio URL fail:', e));
-            return;
-        }
-
-        // 2. Tenta áudio local (arquivo físico)
-        // Usa identifier (novo) ou id (antigo)
-        // O app original usa id, mas nossas novas cores usam identifier (slug)
-        const soundId = item.identifier || item.id;
-        const audioPath = `/audio/pt/colors/${soundId}_.mp3`;
-
-        const audio = new Audio(audioPath);
-
-        audio.play().catch(() => {
-            // 3. Fallback: Se falhar (arquivo não existe), usa TTS do navegador
-            console.log('Audio file not found, using TTS for:', item.namePt || item.pt);
-
-            if ('speechSynthesis' in window) {
-                const utterance = new SpeechSynthesisUtterance(item.namePt || item.pt);
-                utterance.lang = 'pt-BR';
-                window.speechSynthesis.speak(utterance);
-            }
-        });
+    const handlePress = (item: any) => {
+        playItemAudio(item, language as Language, 'colors', 'lowercase');
     };
 
     return (
@@ -81,12 +60,12 @@ export default function ColorsPage() {
                     {colors.map((item: any) => (
                         <ItemCard
                             key={item.id}
-                            title={item.namePt || item.pt} // Suporta formato novo e antigo
+                            title={getLocalizedName(item, language as Language)}
                             imageSource={item.imageUrl || `/images/colors/${item.id}.png`}
                             backgroundColor={item.bgColor || item.color}
                             borderColor={item.borderColor || 'transparent'}
                             textColor={item.textColor}
-                            onPress={() => playSound(item)}
+                            onPress={() => handlePress(item)}
                         />
                     ))}
                 </div>

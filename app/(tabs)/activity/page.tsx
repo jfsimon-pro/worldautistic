@@ -6,6 +6,7 @@ import PageLayout from '../../components/PageLayout';
 import { ActivityProvider } from '../../components/ActivityContext';
 import AnswerModal from '../../components/AnswerModal';
 import styles from '../../styles/Activity.module.css';
+import { useTranslation } from '../../context/LanguageContext';
 
 // Import activities
 import MATH01 from '../../components/activities/math01';
@@ -100,9 +101,11 @@ function ActivityContent() {
 }
 
 export default function ActivityPage() {
+    const { t } = useTranslation();
+
     return (
         <PageLayout backHref="/home">
-            <Suspense fallback={<div>Carregando...</div>}>
+            <Suspense fallback={<div>{t('common.loading')}</div>}>
                 <ActivityContent />
             </Suspense>
         </PageLayout>

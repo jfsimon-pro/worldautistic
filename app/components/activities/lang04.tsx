@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useActivityContext } from "../ActivityContext";
+import { useLanguage } from "../../context/LanguageContext";
+import { getLocalizedName, Language } from "../../utils/i18nHelpers";
 import styles from './ActivityStyles.module.css';
 
 // Import data
@@ -41,19 +43,15 @@ const createLang04 = () => {
     };
 };
 
-const getCategoryName = (category: string): string => {
-    const names: Record<string, string> = {
-        animals: 'Animais',
-        food: 'Alimentos',
-        objects: 'Objetos',
-        colors: 'Cores',
-    };
-    return names[category] || category;
-};
-
 export default function LANG04() {
     const { setResult } = useActivityContext();
+    const { language, t } = useLanguage();
     const [activity] = useState(createLang04());
+
+    const getCategoryName = (category: string): string => {
+        const key = `activityExercises.category${category.charAt(0).toUpperCase() + category.slice(1)}Title`;
+        return t(key);
+    };
 
     const handleAnswer = (selectedCategory: string) => {
         const isCorrect = selectedCategory === activity.correctCategory;
@@ -62,11 +60,11 @@ export default function LANG04() {
 
     return (
         <div className={styles.container}>
-            <p className={styles.instructionText}>A qual categoria pertence?</p>
+            <p className={styles.instructionText}>{t('activityExercises.whichCategoryBelongs')}</p>
 
             <img
                 src={`/images/${activity.correctCategory}/${activity.correctItem.id}.png`}
-                alt={activity.correctItem.pt}
+                alt={getLocalizedName(activity.correctItem, language as Language)}
                 className={styles.animalImage}
             />
 

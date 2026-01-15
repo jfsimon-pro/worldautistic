@@ -1,9 +1,11 @@
 'use client';
 
 import { useAuth } from '../hooks/useAuth';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function LogoutButton() {
     const { logout, user } = useAuth();
+    const { t } = useLanguage();
 
     if (!user) return null;
 
@@ -39,7 +41,7 @@ export default function LogoutButton() {
             }}
         >
             <span>👋</span>
-            <span>Sair</span>
+            <span>{t('common.logout')}</span>
         </button>
     );
 }

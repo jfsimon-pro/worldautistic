@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useActivityContext } from "../ActivityContext";
+import { useLanguage } from "../../context/LanguageContext";
+import { getLocalizedName, Language } from "../../utils/i18nHelpers";
 import styles from './ActivityStyles.module.css';
 
 // Import data
@@ -62,6 +64,7 @@ const createMath05 = (category: string) => {
 
 export default function MATH05() {
     const { setResult } = useActivityContext();
+    const { language, t } = useLanguage();
     const categories = Object.keys(questionData);
     const category = getRandomItem(categories);
     const [activity] = useState(createMath05(category));
@@ -70,19 +73,10 @@ export default function MATH05() {
         setResult(isCorrect ? "correct" : "incorrect");
     };
 
-    const getCategoryName = (cat: string) => {
-        const names: Record<string, string> = {
-            animals: 'itens',
-            food: 'itens',
-            objects: 'itens',
-        };
-        return names[cat] || 'itens';
-    };
-
     return (
         <div className={styles.container}>
             <p className={styles.instructionText}>
-                Quantos {getCategoryName(activity.category)} você vê no total?
+                {t('activityExercises.howManyItemsTotal')}
             </p>
 
             <div className={styles.imageRow}>
@@ -90,7 +84,7 @@ export default function MATH05() {
                     <img
                         key={index}
                         src={`/images/${activity.category}/${item.id}.png`}
-                        alt={item.name}
+                        alt={getLocalizedName(item, language as Language)}
                         className={styles.itemImage}
                     />
                 ))}

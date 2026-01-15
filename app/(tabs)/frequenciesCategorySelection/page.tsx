@@ -4,29 +4,10 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import PageLayout from '../../components/PageLayout';
 import styles from '../../styles/LevelSelection.module.css';
-import { getCategoryTranslation } from '../../utils/audioTranslations';
-
-// Função para formatar nomes vindos da Cloudinary
-function formatCategoryName(name: string): string {
-    // Primeiro tenta obter tradução em português
-    const translation = getCategoryTranslation(name);
-
-    // Se encontrou tradução, retorna
-    if (translation && translation !== name) {
-        return translation;
-    }
-
-    // Caso contrário, formata o nome original
-    return name
-        .replace(/_/g, ' ')  // Remove underscores
-        .replace(/([a-z])([A-Z])/g, '$1 $2')  // Adiciona espaço antes de maiúsculas (camelCase)
-        .replace(/([A-Z])([A-Z][a-z])/g, '$1 $2')  // Separa siglas seguidas de palavra
-        .split(' ')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())  // Capitaliza cada palavra
-        .join(' ');
-}
+import { useTranslation } from '../../context/LanguageContext';
 
 export default function FrequenciesCategorySelectionPage() {
+    const { t } = useTranslation();
     const [categories, setCategories] = useState<string[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -46,15 +27,33 @@ export default function FrequenciesCategorySelectionPage() {
         loadCategories();
     }, []);
 
+    const getTranslatedCategory = (category: string) => {
+        // Tenta obter a tradução usando a chave
+        const translation = t(`frequencyCategories.${category}`);
+
+        // Se a tradução não existir (retornar a própria chave), formata o nome original
+        if (translation === `frequencyCategories.${category}`) {
+            return category
+                .replace(/_/g, ' ')
+                .replace(/([a-z])([A-Z])/g, '$1 $2')
+                .replace(/([A-Z])([A-Z][a-z])/g, '$1 $2')
+                .split(' ')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                .join(' ');
+        }
+
+        return translation;
+    };
+
     return (
         <PageLayout backHref="/home">
             <div className={styles.container}>
-                <h1 className={styles.title}>Selecione a Categoria</h1>
+                <h1 className={styles.title}>{t('frequencies.selectCategory')}</h1>
 
                 {loading ? (
-                    <p>Carregando categorias...</p>
+                    <p>{t('frequencies.loadingCategories')}</p>
                 ) : categories.length === 0 ? (
-                    <p>Nenhuma categoria disponível</p>
+                    <p>{t('frequencies.noCategories')}</p>
                 ) : (
                     <div className={styles.buttons}>
                         {categories.map((category, index) => (
@@ -63,7 +62,7 @@ export default function FrequenciesCategorySelectionPage() {
                                 href={`/frequencies?category=${encodeURIComponent(category)}`}
                                 className={styles.button}
                             >
-                                {formatCategoryName(category)}
+                                {getTranslatedCategory(category)}
                             </Link>
                         ))}
                     </div>

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import PageLayout from '../../components/PageLayout';
 import styles from '../../styles/MemoryGame.module.css';
+import { useTranslation } from '../../context/LanguageContext';
 
 interface Card {
     id: string;
@@ -43,6 +44,7 @@ function generateCards(): Card[] {
 }
 
 export default function MemoryGamePage() {
+    const { t } = useTranslation();
     const [cards, setCards] = useState<Card[]>([]);
     const [selectedCards, setSelectedCards] = useState<string[]>([]);
     const [isProcessing, setIsProcessing] = useState(false);
@@ -112,7 +114,7 @@ export default function MemoryGamePage() {
     return (
         <PageLayout backHref="/home">
             <div className={styles.container}>
-                <h1 className={styles.title}>Jogo da Memória</h1>
+                <h1 className={styles.title}>{t('games.memoryGame')}</h1>
 
                 <div className={styles.grid}>
                     {cards.map(card => (
@@ -132,7 +134,7 @@ export default function MemoryGamePage() {
                 </div>
 
                 <button className={styles.resetButton} onClick={resetGame}>
-                    Reiniciar
+                    {t('games.restart')}
                 </button>
 
                 {/* Win Modal */}
@@ -140,10 +142,10 @@ export default function MemoryGamePage() {
                     <div className={styles.modal}>
                         <div className={styles.modalContent}>
                             <img src="/images/spaceman-victory.png" alt="Victory" className={styles.modalImage} />
-                            <h2 className={styles.modalTitle}>Parabéns!</h2>
-                            <p className={styles.modalText}>Você completou o jogo!</p>
+                            <h2 className={styles.modalTitle}>{t('games.congratulations')}</h2>
+                            <p className={styles.modalText}>{t('games.completed')}</p>
                             <button className={styles.modalButton} onClick={resetGame}>
-                                Jogar Novamente
+                                {t('games.playAgain')}
                             </button>
                         </div>
                     </div>

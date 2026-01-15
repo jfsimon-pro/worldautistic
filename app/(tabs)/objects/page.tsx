@@ -4,8 +4,11 @@ import { useEffect, useState } from 'react';
 import PageLayout from '../../components/PageLayout';
 import ItemCard from '../../components/ItemCard';
 import styles from '../../styles/ItemGrid.module.css';
+import { useLanguage } from '../../context/LanguageContext';
+import { getLocalizedName, playItemAudio, Language } from '../../utils/i18nHelpers';
 
 export default function ObjectsPage() {
+    const { language } = useLanguage();
     const [objects, setObjects] = useState<any[]>([]);
 
     useEffect(() => {
@@ -36,38 +39,8 @@ export default function ObjectsPage() {
         fetchObjects();
     }, []);
 
-    const playSound = (item: any) => {
-        // 1. Tenta áudio do banco (se houver url salva)
-        if (item.audioPt || item.audioUrlPt) {
-            const audio = new Audio(item.audioPt || item.audioUrlPt);
-            audio.play().catch(e => console.log('Audio URL fail:', e));
-            return;
-        }
-
-        // 2. Tenta áudio local (arquivo físico)
-        // Lógica legada para objetos: id + "_" (ex: ball_.mp3)
-        // Lógica nova: identifier (ex: ball)
-
-        let audioPath = '';
-        if (item.identifier) {
-            // Novos itens usam identifier
-            audioPath = `/audio/pt/objects/${item.identifier}.mp3`;
-        } else {
-            // Legado: id + "_"
-            audioPath = `/audio/pt/objects/${item.id}_.mp3`;
-        }
-
-        const audio = new Audio(audioPath);
-
-        audio.play().catch(() => {
-            // 3. Fallback para TTS
-            console.log('Audio file not found, using TTS for:', item.namePt || item.pt);
-            if ('speechSynthesis' in window) {
-                const utterance = new SpeechSynthesisUtterance(item.namePt || item.pt);
-                utterance.lang = 'pt-BR';
-                window.speechSynthesis.speak(utterance);
-            }
-        });
+    const handlePress = (item: any) => {
+        playItemAudio(item, language as Language, 'objects', 'lowercase');
     };
 
     return (
@@ -77,12 +50,12 @@ export default function ObjectsPage() {
                     {objects.map((item: any) => (
                         <ItemCard
                             key={item.id}
-                            title={item.namePt || item.pt}
+                            title={getLocalizedName(item, language as Language)}
                             imageSource={item.imageUrl || `/images/objects/${item.id}.png`}
                             backgroundColor={item.bgColor || item.color}
                             borderColor={item.borderColor || 'transparent'}
                             textColor={item.textColor}
-                            onPress={() => playSound(item)}
+                            onPress={() => handlePress(item)}
                         />
                     ))}
                 </div>

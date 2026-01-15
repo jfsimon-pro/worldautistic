@@ -45,5 +45,95 @@
         "title": "Configurações",
         "language": "Idioma",
         "logout": "Sair"
+    },
+    "activities": {
+        "numbers": "Números",
+        "letters": "Letras"
+    },
+    "commands": {
+        "actions": "Ações",
+        "animals": "Animais",
+        "food": "Comida",
+        "objects": "Objetos",
+        "colors": "Cores"
+    },
+    "games": {
+        "memoryGame": "Jogo da Memória",
+        "game2": "Jogo 2",
+        "game3": "Jogo 3",
+        "game4": "Jogo 4",
+        "comingSoon": "Em breve",
+        "restart": "Reiniciar",
+        "congratulations": "Parabéns!",
+        "completed": "Você completou o jogo!",
+        "playAgain": "Jogar Novamente"
+    },
+    "frequencies": {
+        "selectCategory": "Selecione a Categoria",
+        "loadingCategories": "Carregando categorias...",
+        "noCategories": "Nenhuma categoria disponível",
+        "loadingFrequencies": "Carregando frequências...",
+        "noFrequencies": "Nenhuma frequência encontrada para esta categoria."
+    },
+    "levels": {
+        "selectLevel": "Selecione o Nível",
+        "level1": "Nível 1",
+        "level2": "Nível 2",
+        "level3": "Nível 3"
+    },
+    "activityExercises": {
+        "whatNumberDidYouHear": "Qual número você ouviu?",
+        "tapIconToHearAgain": "Toque no ícone para ouvir novamente",
+        "waitingForAudio": "Aguarde o áudio...",
+        "howManyDoYouSee": "Quantos {category} você vê?",
+        "howManyLegs": "Quantas patas tem esse animal?",
+        "howManyFingers": "Quantos dedos estão levantados?",
+        "howManyItemsTotal": "Quantos itens você vê no total?",
+        "whichNumberIsMissing": "Qual número está faltando?",
+        "clickImageYouHeard": "Clique na imagem que você ouviu",
+        "completeTheWord": "Complete a palavra",
+        "whichCategoryBelongs": "A qual categoria pertence?",
+        "categoryAnimals": "animais",
+        "categoryFood": "alimentos",
+        "categoryObjects": "objetos",
+        "categoryColors": "cores",
+        "categoryItems": "itens",
+        "categoryAnimalsTitle": "Animais",
+        "categoryFoodTitle": "Alimentos",
+        "categoryObjectsTitle": "Objetos",
+        "categoryColorsTitle": "Cores"
+    },
+    "feedback": {
+        "congratulations": "Parabéns!",
+        "ops": "Ops!",
+        "correct": "Você acertou!",
+        "incorrect": "Tente novamente!",
+        "next": "Próximo",
+        "tryAgain": "Tentar novamente"
+    },
+    "frequencyCategories": {
+        "balancedSensoryStimulation": "Estímulo Sensorial Equilibrado",
+        "cognitiveStimulation": "Estímulo Cognitivo",
+        "developmentOfCommunication": "Desenvolvimento da Comunicação",
+        "focusAndConcentration": "Foco e Concentração",
+        "moodImprovement": "Melhoria de Humor",
+        "reductionOfCrisesAndAnxiety": "Redução de Crises e Ansiedade",
+        "relaxationAndSleep": "Relaxamento e Sono",
+        "selfRegulationDuringCrisis": "Autorregulação Durante Crise"
+    },
+    "frequencyAudios": {
+        "deepRelaxation": "Relaxamento Profundo",
+        "regulatingSleep": "Regulando o Sono",
+        "relaxationBeforeSleeping": "Relaxamento Antes de Dormir",
+        "deltaSleep": "Sono Delta",
+        "betaBinauralWaves": "Ondas Binaurais Beta",
+        "alphaRelaxation": "Relaxamento Alpha",
+        "higherConsciousnessGamma": "Consciência Superior Gamma",
+        "432hzAlphaHealing": "Cura Alpha 432Hz",
+        "pianoSoundsThatStimulateFocus": "Sons de Piano para Foco",
+        "natureToHelpWithAttention": "Natureza para Atenção",
+        "rainSoundsAsCalmingBackground": "Chuva Calmante",
+        "releaseOfFearsAndNegativeEmotions": "Liberação de Medos",
+        "emotionalHarmony": "Harmonia Emocional"
     }
 }

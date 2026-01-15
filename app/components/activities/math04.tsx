@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useActivityContext } from "../ActivityContext";
+import { useLanguage } from "../../context/LanguageContext";
 import styles from './ActivityStyles.module.css';
 
 function createMath04() {
@@ -28,6 +29,7 @@ function createMath04() {
 
 export default function MATH04() {
     const { setResult } = useActivityContext();
+    const { t } = useLanguage();
     const [activity] = useState(createMath04());
 
     const handleAnswer = (isCorrect: boolean) => {
@@ -36,11 +38,11 @@ export default function MATH04() {
 
     return (
         <div className={styles.container}>
-            <p className={styles.instructionText}>Quantos dedos estão levantados?</p>
+            <p className={styles.instructionText}>{t('activityExercises.howManyFingers')}</p>
 
             <img
                 src={`/images/hands/${activity.answer}.png`}
-                alt={`${activity.answer} dedos`}
+                alt={`${activity.answer}`}
                 className={styles.handImage}
             />
 
