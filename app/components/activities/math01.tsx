@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useActivityContext } from "../ActivityContext";
 import { useLanguage } from "../../context/LanguageContext";
-import { Language } from "../../utils/i18nHelpers";
+
 import styles from './ActivityStyles.module.css';
 
 // Map numbers to audio file names
