@@ -79,6 +79,7 @@ export async function POST(request: NextRequest) {
                     email: normalizedEmail,
                     name: normalizedEmail.split('@')[0],
                     role: 'USER',
+                    passwordHash: 'WHITELIST_NO_PASSWORD', // Senha dummy - login é email-only
                     subscriptionStatus: 'active',
                     hasActiveSubscription: true,
                     subscriptionExpiresAt: new Date(new Date().setFullYear(new Date().getFullYear() + 10))
