@@ -10,13 +10,13 @@ import crypto from 'crypto';
  */
 export function validateHotmartWebhook(hottok: string | null): boolean {
   const expectedToken = process.env.HOTMART_WEBHOOK_SECRET;
-  
+
   if (!expectedToken) {
     console.warn('⚠️ HOTMART_WEBHOOK_SECRET não configurado no .env');
     // Em desenvolvimento, aceitar sem validação (REMOVER EM PRODUÇÃO)
     return process.env.NODE_ENV === 'development';
   }
-  
+
   return hottok === expectedToken;
 }
 
@@ -24,7 +24,7 @@ export function validateHotmartWebhook(hottok: string | null): boolean {
 // 📦 TIPOS DO PAYLOAD HOTMART
 // ============================================
 
-export type HotmartEventType = 
+export type HotmartEventType =
   | 'PURCHASE_APPROVED'
   | 'PURCHASE_COMPLETE'
   | 'PURCHASE_CANCELED'
@@ -38,18 +38,18 @@ export interface HotmartWebhookPayload {
   event: HotmartEventType;
   creation_date: number; // timestamp
   data: {
-    product: {
+    product?: {
       id: number;
       name: string;
       ucode?: string;
     };
-    buyer: {
+    buyer?: {
       email: string;
       name: string;
       checkout_phone?: string;
       phone_local_code?: string;
     };
-    purchase: {
+    purchase?: {
       transaction: string;
       status: string;
       order_date: number;
@@ -111,7 +111,7 @@ export interface ParsedHotmartData {
  */
 export function parseHotmartEvent(payload: HotmartWebhookPayload): ParsedHotmartData {
   const { data, event } = payload;
-  
+
   // Determinar status baseado no evento
   let status: ParsedHotmartData['status'] = 'APPROVED';
   switch (event) {
@@ -131,21 +131,39 @@ export function parseHotmartEvent(payload: HotmartWebhookPayload): ParsedHotmart
     default:
       status = 'APPROVED';
   }
-  
+
+  // Safely extract data with fallbacks
+  const transactionId = data.purchase?.transaction || data.subscription?.subscriber?.code || `UNKNOWN_${payload.id}`;
+  const productId = data.product?.id?.toString() || '0';
+  const productName = data.product?.name || 'Unknown Product';
+  const buyerEmail = (data.buyer?.email || '').toLowerCase().trim();
+  const buyerName = data.buyer?.name || 'Unknown Buyer';
+  const amount = data.purchase?.price?.value || 0;
+  const currency = data.purchase?.price?.currency_code || 'BRL';
+
+  // Handle dates safely
+  let purchaseDate = new Date();
+  if (data.purchase?.order_date) {
+    purchaseDate = new Date(data.purchase.order_date * 1000);
+  }
+
+  let approvedDate: Date | undefined;
+  if (data.purchase?.approved_date) {
+    approvedDate = new Date(data.purchase.approved_date * 1000);
+  }
+
   return {
-    transactionId: data.purchase.transaction,
-    productId: data.product.id.toString(),
-    productName: data.product.name,
-    buyerEmail: data.buyer.email.toLowerCase().trim(),
-    buyerName: data.buyer.name,
-    amount: data.purchase.price.value,
-    currency: data.purchase.price.currency_code,
-    purchaseDate: new Date(data.purchase.order_date * 1000),
-    approvedDate: data.purchase.approved_date 
-      ? new Date(data.purchase.approved_date * 1000) 
-      : undefined,
+    transactionId,
+    productId,
+    productName,
+    buyerEmail,
+    buyerName,
+    amount,
+    currency,
+    purchaseDate,
+    approvedDate,
     isRecurrent: !!data.subscription,
-    subscriptionId: data.subscription?.subscriber.code,
+    subscriptionId: data.subscription?.subscriber?.code,
     subscriptionStatus: data.subscription?.status,
     status,
     rawData: payload,
@@ -166,7 +184,7 @@ export function calculateExpirationDate(
   customDays?: number
 ): Date {
   const expiresAt = new Date();
-  
+
   if (customDays) {
     expiresAt.setDate(expiresAt.getDate() + customDays);
   } else if (isRecurrent) {
@@ -178,7 +196,7 @@ export function calculateExpirationDate(
     const defaultDays = parseInt(process.env.DEFAULT_SUBSCRIPTION_DAYS || '365', 10);
     expiresAt.setDate(expiresAt.getDate() + defaultDays);
   }
-  
+
   return expiresAt;
 }
 
@@ -197,12 +215,12 @@ export function generateTemporaryPassword(): string {
     'Jardim', 'Livro', 'Luz', 'Tempo', 'Mundo',
     'Sonho', 'Arte', 'Vida', 'Ceu', 'Sol'
   ];
-  
+
   const randomWord = words[Math.floor(Math.random() * words.length)];
   const randomNumbers = Math.floor(1000 + Math.random() * 9000); // 1000-9999
   const symbols = '!@#$%';
   const randomSymbol = symbols[Math.floor(Math.random() * symbols.length)];
-  
+
   return `${randomWord}${randomNumbers}${randomSymbol}`;
 }
 
@@ -213,11 +231,11 @@ export function generateSecurePassword(length: number = 16): string {
   const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*';
   let password = '';
   const randomBytes = crypto.randomBytes(length);
-  
+
   for (let i = 0; i < length; i++) {
     password += chars[randomBytes[i] % chars.length];
   }
-  
+
   return password;
 }
 
@@ -238,11 +256,11 @@ export function isValidEmail(email: string): boolean {
  */
 export function isValidProductId(productId: string): boolean {
   const allowedProductId = process.env.HOTMART_PRODUCT_ID;
-  
+
   // Se não configurou produto específico, aceitar qualquer um
   if (!allowedProductId) {
     return true;
   }
-  
+
   return productId === allowedProductId;
 }
