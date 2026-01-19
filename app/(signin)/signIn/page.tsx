@@ -182,14 +182,6 @@ export default function SignInPage() {
 
           </form>
 
-          <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
-            <Link href="/register">
-              <span className={styles['checkbox-text']} style={{ fontWeight: 500, textDecoration: 'underline', fontSize: '0.85rem' }}>
-                Não tem acesso? Compre agora
-              </span>
-            </Link>
-          </div>
-
         </div>
       </div>
 

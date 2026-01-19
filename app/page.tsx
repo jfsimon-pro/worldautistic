@@ -105,9 +105,6 @@ export default function SignInPage() {
           <Link href="/signIn" className={styles['default-btn']}>
             {t('login.haveAccount')}
           </Link>
-          <Link href="/register" className={styles['default-btn']}>
-            {t('login.createAccount')}
-          </Link>
         </div>
 
         {/* Install PWA Button - Android/Chrome */}
