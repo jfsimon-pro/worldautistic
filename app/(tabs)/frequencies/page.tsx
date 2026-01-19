@@ -35,6 +35,14 @@ function FrequenciesContent() {
             }
         }
         loadFrequencies();
+
+        return () => {
+            if (audioRef.current) {
+                audioRef.current.pause();
+                audioRef.current = null;
+            }
+            setPlayingId(null);
+        };
     }, [category]);
 
     const handlePlayPause = (freq: Frequency) => {
