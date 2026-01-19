@@ -41,22 +41,31 @@ export async function POST(request: NextRequest) {
 
         // 2. Validação RIGOROSA de status da assinatura (Exceto Admin)
         if (user.role !== 'ADMIN') {
-            const isStatusActive = user.subscriptionStatus === 'active';
-            const isNotExpired = user.subscriptionExpiresAt ? new Date(user.subscriptionExpiresAt) > new Date() : false;
+            // Verificar whitelist primeiro
+            const whitelisted = await (prisma as any).whitelist.findUnique({
+                where: { email: user.email.toLowerCase().trim() }
+            });
 
-            // A flag hasActiveSubscription é apenas um cache, a verdade está no status e data
-            const isValidAccess = isStatusActive && isNotExpired;
+            if (whitelisted) {
+                console.log('✅ [LOGIN API] Acesso liberado por Whitelist:', user.email);
+            } else {
+                const isStatusActive = user.subscriptionStatus === 'active';
+                const isNotExpired = user.subscriptionExpiresAt ? new Date(user.subscriptionExpiresAt) > new Date() : false;
 
-            if (!isValidAccess) {
-                console.log('❌ [LOGIN API] Acesso negado: assinatura inválida, expirada ou cancelada');
-                console.log(`Diagnostic: Status=${user.subscriptionStatus}, Expired=${!isNotExpired}`);
-                return NextResponse.json(
-                    {
-                        error: 'Assinatura necessária ou expirada',
-                        details: 'subscription_required'
-                    },
-                    { status: 403 }
-                );
+                // A flag hasActiveSubscription é apenas um cache, a verdade está no status e data
+                const isValidAccess = isStatusActive && isNotExpired;
+
+                if (!isValidAccess) {
+                    console.log('❌ [LOGIN API] Acesso negado: assinatura inválida, expirada ou cancelada');
+                    console.log(`Diagnostic: Status=${user.subscriptionStatus}, Expired=${!isNotExpired}`);
+                    return NextResponse.json(
+                        {
+                            error: 'Assinatura necessária ou expirada',
+                            details: 'subscription_required'
+                        },
+                        { status: 403 }
+                    );
+                }
             }
         }
 
