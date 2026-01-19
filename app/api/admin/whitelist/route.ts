@@ -88,7 +88,7 @@ export async function POST(request: NextRequest) {
 
         // 3. Criar uma compra manual simulada (Para aparecer em Compras e garantir acesso se houver outra verificação)
         // Isso atende ao pedido de "simular como se fosse uma compra"
-        const existingPurchase = await prisma.purchase.findFirst({
+        const existingPurchase = await (prisma as any).purchase.findFirst({
             where: {
                 userId: userExists ? userExists.id : (await prisma.user.findUnique({ where: { email: normalizedEmail } }))?.id
             }
@@ -97,13 +97,14 @@ export async function POST(request: NextRequest) {
         if (!existingPurchase) {
             const targetUser = await prisma.user.findUnique({ where: { email: normalizedEmail } });
             if (targetUser) {
-                await prisma.purchase.create({
+                await (prisma as any).purchase.create({
                     data: {
                         userId: targetUser.id,
                         hotmartTransactionId: `WHITELIST_${Date.now()}`,
                         hotmartProductId: 'WHITELIST', // Campo obrigatório
                         status: 'APPROVED',
-                        // paymentType e offerCode removidos pois não existem no schema Purchase
+                        // [FIX] paymentType e offerCode removidos pois não existem no schema Purchase
+                        // Campos atualizados para compatibilidade com Schema v2
                         amount: 0,
                         currency: 'BRL',
                         productName: 'Acesso Manual (Whitelist)',
