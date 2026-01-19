@@ -3,10 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import styles from '../../styles/Register.module.css';
-import { useTranslation } from '../../context/LanguageContext';
-
 export default function AdminSignInPage() {
-    const { t } = useTranslation();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
