@@ -300,16 +300,31 @@ async function handlePurchaseRefunded(data: any) {
         });
 
         // Atualizar registro da compra
-        await prisma.purchase.updateMany({
-            where: {
-                userId: user.id,
-                hotmartTransactionId: data.transactionId,
-            },
+        // Tentar encontrar compra por Transaction ID ou Subscription ID
+        const whereClause: any = {
+            userId: user.id,
+            OR: [
+                { hotmartTransactionId: data.transactionId },
+            ]
+        };
+
+        if (data.subscriptionId) {
+            whereClause.OR.push({ subscriptionId: data.subscriptionId });
+        }
+
+        const updateResult = await prisma.purchase.updateMany({
+            where: whereClause,
             data: {
                 status: data.status,
                 refundedDate: new Date(),
             },
         });
+
+        if (updateResult.count === 0) {
+            console.warn('⚠️ Nenhuma compra encontrada para atualizar no reembolso:', data.transactionId, data.subscriptionId);
+        } else {
+            console.log(`💰 Status da compra atualizado para ${data.status} (${updateResult.count} registros)`);
+        }
 
         console.log('💰 Reembolso processado (Forçado):', user.id);
 
