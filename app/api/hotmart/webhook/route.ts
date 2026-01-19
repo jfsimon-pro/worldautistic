@@ -143,28 +143,45 @@ async function handlePurchaseApproved(data: any) {
             console.log('🔄 Acesso renovado para usuário existente:', user.id);
         }
 
-        // Registrar a compra
-        await prisma.purchase.create({
-            data: {
-                userId: user.id,
-                hotmartTransactionId: data.transactionId,
-                hotmartProductId: data.productId,
-                productName: data.productName,
-                buyerEmail: data.buyerEmail,
-                buyerName: data.buyerName,
-                amount: data.amount,
-                currency: data.currency,
-                status: data.status,
-                purchaseDate: data.purchaseDate,
-                approvedDate: data.approvedDate,
-                isRecurrent: data.isRecurrent,
-                subscriptionId: data.subscriptionId,
-                subscriptionStatus: data.subscriptionStatus,
-                metadata: data.rawData,
-            },
-        });
+        // Sanitizar datas antes de salvar (dados de teste da Hotmart podem ter datas inválidas)
+        const sanitizeDate = (date: Date | undefined): Date | undefined => {
+            if (!date) return undefined;
+            const year = date.getFullYear();
+            // Se ano for > 3000 ou < 1900, usar data atual
+            if (year > 3000 || year < 1900) {
+                console.warn('⚠️ Data inválida detectada, usando data atual');
+                return new Date();
+            }
+            return date;
+        };
 
-        console.log('💾 Compra registrada no banco de dados');
+        // Registrar a compra com datas sanitizadas
+        try {
+            await prisma.purchase.create({
+                data: {
+                    userId: user.id,
+                    hotmartTransactionId: data.transactionId,
+                    hotmartProductId: data.productId,
+                    productName: data.productName,
+                    buyerEmail: data.buyerEmail,
+                    buyerName: data.buyerName,
+                    amount: data.amount,
+                    currency: data.currency,
+                    status: data.status,
+                    purchaseDate: sanitizeDate(data.purchaseDate) || new Date(),
+                    approvedDate: sanitizeDate(data.approvedDate),
+                    isRecurrent: data.isRecurrent,
+                    subscriptionId: data.subscriptionId,
+                    subscriptionStatus: data.subscriptionStatus,
+                    metadata: data.rawData,
+                },
+            });
+            console.log('💾 Compra registrada no banco de dados');
+        } catch (purchaseError) {
+            // Se falhar ao criar purchase, logar mas não falhar todo o processo
+            // O importante é que o usuário foi criado/ativado
+            console.error('⚠️ Erro ao registrar compra (usuário já foi ativado):', purchaseError);
+        }
 
     } catch (error) {
         console.error('❌ Erro ao processar compra aprovada:', error);
