@@ -51,3 +51,43 @@ export async function PATCH(
         );
     }
 }
+
+export async function DELETE(
+    request: NextRequest,
+    { params }: { params: Promise<{ id: string }> }
+) {
+    try {
+        // Verificar autenticação
+        const token = getAccessTokenFromRequest(request);
+        if (!token) {
+            return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
+        }
+
+        const payload = await verifyAccessToken(token);
+        if (!payload || payload.role !== 'ADMIN') {
+            return NextResponse.json({ error: 'Acesso negado' }, { status: 403 });
+        }
+
+        const { id } = await params;
+
+        // Impedir auto-deleção
+        if (id === payload.userId) {
+            return NextResponse.json({ error: 'Não é possível excluir a si mesmo' }, { status: 400 });
+        }
+
+        // Excluir usuário
+        await prisma.user.delete({
+            where: { id },
+        });
+
+        return NextResponse.json({
+            message: 'Usuário excluído com sucesso',
+        });
+    } catch (error) {
+        console.error('Erro ao excluir usuário:', error);
+        return NextResponse.json(
+            { error: 'Erro ao excluir usuário' },
+            { status: 500 }
+        );
+    }
+}

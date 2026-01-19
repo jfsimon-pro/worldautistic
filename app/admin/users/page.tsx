@@ -80,6 +80,31 @@ export default function UsersManagement() {
         }
     };
 
+    const handleDelete = async (userId: string) => {
+        if (!window.confirm('Tem certeza que deseja excluir este usuário? Esta ação não pode ser desfeita e apagará todo o histórico.')) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/admin/users/${userId}`, {
+                method: 'DELETE',
+                credentials: 'include',
+            });
+
+            if (response.ok) {
+                // Otimista: remover da lista local imediatamente
+                setUsers(users.filter(u => u.id !== userId));
+                alert('Usuário excluído com sucesso!');
+            } else {
+                const data = await response.json();
+                alert(data.error || 'Erro ao excluir usuário');
+            }
+        } catch (error) {
+            console.error('Erro ao excluir usuário:', error);
+            alert('Erro ao excluir usuário');
+        }
+    };
+
     if (loading || loadingUsers) {
         return (
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', backgroundColor: '#f5f7fa' }}>
@@ -197,12 +222,20 @@ export default function UsersManagement() {
                                                     </button>
                                                 </div>
                                             ) : (
-                                                <button
-                                                    onClick={() => handleEdit(user)}
-                                                    style={{ padding: '0.5rem 1rem', backgroundColor: '#667eea', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '600' }}
-                                                >
-                                                    ✏️ Editar
-                                                </button>
+                                                <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
+                                                    <button
+                                                        onClick={() => handleEdit(user)}
+                                                        style={{ padding: '0.5rem 1rem', backgroundColor: '#667eea', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '600' }}
+                                                    >
+                                                        ✏️ Editar
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleDelete(user.id)}
+                                                        style={{ padding: '0.5rem 1rem', backgroundColor: '#e74c3c', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '600' }}
+                                                    >
+                                                        🗑️ Excluir
+                                                    </button>
+                                                </div>
                                             )}
                                         </td>
                                     </tr>
