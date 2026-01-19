@@ -54,6 +54,7 @@ function FrequenciesContent() {
                 audioRef.current.pause();
             }
             audioRef.current = new Audio(freq.secure_url);
+            audioRef.current.loop = true; // Loop infinito
             audioRef.current.play();
             setPlayingId(freq.public_id);
 
