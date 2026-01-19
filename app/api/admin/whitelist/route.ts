@@ -101,15 +101,16 @@ export async function POST(request: NextRequest) {
                     data: {
                         userId: targetUser.id,
                         hotmartTransactionId: `WHITELIST_${Date.now()}`,
+                        hotmartProductId: 'WHITELIST', // Campo obrigatório
                         status: 'APPROVED',
-                        paymentType: 'MANUAL_WHITELIST',
-                        price: 0,
-                        offerCode: 'WHITELIST',
+                        // paymentType e offerCode removidos pois não existem no schema Purchase
+                        amount: 0,
+                        currency: 'BRL',
                         productName: 'Acesso Manual (Whitelist)',
-                        orderDate: new Date(),
+                        purchaseDate: new Date(),
                         approvedDate: new Date(),
-                        userEmail: normalizedEmail,
-                        userName: targetUser.name || 'Whitelist User'
+                        buyerEmail: normalizedEmail, // Campo obrigatório (buyerEmail)
+                        buyerName: targetUser.name || 'Whitelist User' // Campo obrigatório (buyerName)
                     }
                 });
                 console.log('💰 [WHITELIST] Compra manual criada para:', normalizedEmail);
