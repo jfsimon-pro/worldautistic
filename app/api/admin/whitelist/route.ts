@@ -86,6 +86,36 @@ export async function POST(request: NextRequest) {
             });
         }
 
+        // 3. Criar uma compra manual simulada (Para aparecer em Compras e garantir acesso se houver outra verificação)
+        // Isso atende ao pedido de "simular como se fosse uma compra"
+        const existingPurchase = await prisma.purchase.findFirst({
+            where: {
+                userId: userExists ? userExists.id : (await prisma.user.findUnique({ where: { email: normalizedEmail } }))?.id
+            }
+        });
+
+        if (!existingPurchase) {
+            const targetUser = await prisma.user.findUnique({ where: { email: normalizedEmail } });
+            if (targetUser) {
+                await prisma.purchase.create({
+                    data: {
+                        userId: targetUser.id,
+                        hotmartTransactionId: `WHITELIST_${Date.now()}`,
+                        status: 'APPROVED',
+                        paymentType: 'MANUAL_WHITELIST',
+                        price: 0,
+                        offerCode: 'WHITELIST',
+                        productName: 'Acesso Manual (Whitelist)',
+                        orderDate: new Date(),
+                        approvedDate: new Date(),
+                        userEmail: normalizedEmail,
+                        userName: targetUser.name || 'Whitelist User'
+                    }
+                });
+                console.log('💰 [WHITELIST] Compra manual criada para:', normalizedEmail);
+            }
+        }
+
         return NextResponse.json(newEntry);
 
     } catch (error) {
