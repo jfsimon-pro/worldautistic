@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/app/lib/prisma';
-import bcrypt from 'bcryptjs';
 import { generateAccessToken, generateRefreshToken, getRefreshTokenExpiration } from '@/app/lib/auth';
 import { setAuthCookies } from '@/app/lib/cookies';
 
@@ -8,14 +7,14 @@ export async function POST(request: NextRequest) {
     try {
         console.log('\n🟢 [LOGIN API] ==================');
         const body = await request.json();
-        const { email, password } = body;
+        const { email } = body;
         console.log('📧 [LOGIN API] Email:', email);
 
         // Validações básicas
-        if (!email || !password) {
-            console.log('❌ [LOGIN API] Validação falhou');
+        if (!email) {
+            console.log('❌ [LOGIN API] Validação falhou: email vazio');
             return NextResponse.json(
-                { error: 'Email e senha são obrigatórios' },
+                { error: 'Email é obrigatório' },
                 { status: 400 }
             );
         }
@@ -26,39 +25,40 @@ export async function POST(request: NextRequest) {
             where: { email },
         });
 
+        // 1. Verifica se usuário existe
         if (!user) {
             console.log('❌ [LOGIN API] Usuário não encontrado');
             return NextResponse.json(
-                { error: 'Email ou senha incorretos' },
-                { status: 401 }
+                { error: 'Email não encontrado' },
+                { status: 404 }
             );
         }
 
         console.log('✅ [LOGIN API] Usuário encontrado:', user.id);
+        console.log('📊 [LOGIN API] Status Assinatura:', user.subscriptionStatus);
+        console.log('⏳ [LOGIN API] Tem Assinatura Ativa:', user.hasActiveSubscription);
 
-        // Verificar senha
-        console.log('🔑 [LOGIN API] Verificando senha...');
-        const passwordMatch = await bcrypt.compare(password, user.passwordHash);
-
-        if (!passwordMatch) {
-            console.log('❌ [LOGIN API] Senha incorreta');
+        // 2. Verifica se tem assinatura ativa (Substitui senha)
+        // Admin sempre pode logar, usuários precisam de assinatura
+        if (user.role !== 'ADMIN' && !user.hasActiveSubscription) {
+            console.log('❌ [LOGIN API] Acesso negado: sem assinatura ativa');
             return NextResponse.json(
-                { error: 'Email ou senha incorretos' },
-                { status: 401 }
+                {
+                    error: 'Assinatura necessária',
+                    details: 'subscription_required'
+                },
+                { status: 403 }
             );
         }
 
-        console.log('✅ [LOGIN API] Senha correta');
+        console.log('✅ [LOGIN API] Acesso autorizado (Assinatura Ativa)');
 
         // Gerar tokens JWT
         console.log('🎫 [LOGIN API] Gerando tokens...');
         const accessToken = await generateAccessToken(user.id, user.role);
         const refreshToken = await generateRefreshToken(user.id);
-        console.log('✅ [LOGIN API] Access Token:', accessToken.substring(0, 20) + '...');
-        console.log('✅ [LOGIN API] Refresh Token:', refreshToken.substring(0, 20) + '...');
 
         // Salvar refresh token no banco
-        console.log('💾 [LOGIN API] Salvando refresh token...');
         await prisma.refreshToken.create({
             data: {
                 token: refreshToken,
@@ -66,31 +66,25 @@ export async function POST(request: NextRequest) {
                 expiresAt: getRefreshTokenExpiration(),
             },
         });
-        console.log('✅ [LOGIN API] Refresh token salvo');
+        console.log('✅ [LOGIN API] Tokens gerados e salvos');
 
         // Atualizar streak do usuário
-        console.log('🔥 [LOGIN API] Atualizando streak...');
         const { updateUserStreak } = await import('@/app/lib/streak');
         await updateUserStreak(user.id);
 
-        // Tentar atualizar último login (não-bloqueante)
+        // Tentar atualizar último login
         prisma.user.update({
             where: { id: user.id },
             data: { lastLoginAt: new Date() },
-        }).catch((err: any) => {
-            console.error('⚠️ [LOGIN API] Erro ao atualizar lastLoginAt:', err);
-        });
+        }).catch((err: any) => console.error('⚠️ Erro ao atualizar lastLoginAt:', err));
 
         // Criar response com cookies
-        console.log('🍪 [LOGIN API] Definindo cookies...');
         const response = NextResponse.json({
             message: 'Login realizado com sucesso',
         });
 
         const finalResponse = setAuthCookies(response, accessToken, refreshToken);
-        console.log('✅ [LOGIN API] Cookies definidos na response');
-        console.log('🍪 [LOGIN API] Response headers:', finalResponse.headers.get('set-cookie'));
-        console.log('✅ [LOGIN API] Login concluído com sucesso!\n');
+        console.log('✅ [LOGIN API] Login concluído com sucesso (modo email-only)\n');
 
         return finalResponse;
     } catch (error) {

@@ -8,7 +8,6 @@ import { useTranslation } from '../../context/LanguageContext';
 export default function SignInPage() {
   const { t } = useTranslation();
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -20,8 +19,8 @@ export default function SignInPage() {
     console.log('📧 Email:', email);
 
     // Validações
-    if (!email || !password) {
-      console.log('❌ [LOGIN] Validação falhou: campos vazios');
+    if (!email) {
+      console.log('❌ [LOGIN] Validação falhou: email vazio');
       setError(t('signIn.emailRequired'));
       return;
     }
@@ -39,7 +38,6 @@ export default function SignInPage() {
         credentials: 'include',
         body: JSON.stringify({
           email,
-          password,
         }),
       });
 
@@ -49,6 +47,9 @@ export default function SignInPage() {
 
       if (!response.ok) {
         console.log('❌ [LOGIN] Response não OK:', data.error);
+        if (data.details === 'subscription_required') {
+          throw new Error('Assinatura necessária. Verifique seu email de compra.');
+        }
         throw new Error(data.error || t('signIn.loginError'));
       }
 
@@ -133,6 +134,13 @@ export default function SignInPage() {
         {/* Blue Card Form */}
         <div className={styles['blue-card']}>
 
+          <div style={{ textAlign: 'center', marginBottom: '1.5rem', color: 'white' }}>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '0.5rem' }}>Acesso de Assinante</h2>
+            <p style={{ fontSize: '0.9rem', opacity: 0.9 }}>
+              Digite o email usado na compra da Hotmart para entrar.
+            </p>
+          </div>
+
           <form onSubmit={handleSignIn} >
 
             <div className={styles['form-group']}>
@@ -142,16 +150,7 @@ export default function SignInPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className={styles['form-input']}
-              />
-            </div>
-
-            <div className={styles['form-group']}>
-              <label className={styles['form-label']}>{t('signIn.password')}</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className={styles['form-input']}
+                placeholder="exemplo@email.com"
               />
             </div>
 
@@ -160,13 +159,15 @@ export default function SignInPage() {
               <div style={{
                 padding: '1rem',
                 marginBottom: '1rem',
-                backgroundColor: '#fee',
-                border: '1px solid #fcc',
+                backgroundColor: '#fee2e2',
+                border: '1px solid #ef4444',
                 borderRadius: '8px',
-                color: '#c00',
+                color: '#b91c1c',
                 fontSize: '0.9rem',
+                fontWeight: 500,
+                textAlign: 'left'
               }}>
-                {error}
+                ⚠️ {error}
               </div>
             )}
 
@@ -174,17 +175,17 @@ export default function SignInPage() {
               type="submit"
               className={styles['default-btn']}
               disabled={loading}
-              style={{ opacity: loading ? 0.6 : 1, cursor: loading ? 'not-allowed' : 'pointer' }}
+              style={{ opacity: loading ? 0.6 : 1, cursor: loading ? 'not-allowed' : 'pointer', marginTop: '1rem' }}
             >
-              {loading ? t('signIn.entering') : t('signIn.enter')}
+              {loading ? 'Verificando...' : 'Entrar Agora'}
             </button>
 
           </form>
 
-          <div style={{ marginTop: '0.5rem', textAlign: 'center' }}>
+          <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
             <Link href="/register">
-              <span className={styles['checkbox-text']} style={{ fontWeight: 500, textDecoration: 'underline' }}>
-                {t('signIn.requestAccess')}
+              <span className={styles['checkbox-text']} style={{ fontWeight: 500, textDecoration: 'underline', fontSize: '0.85rem' }}>
+                Não tem acesso? Compre agora
               </span>
             </Link>
           </div>
