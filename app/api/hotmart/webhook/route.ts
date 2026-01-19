@@ -45,8 +45,9 @@ export async function POST(request: NextRequest) {
 
         const parsedData = parseHotmartEvent(payload);
 
-        // 3. Validar email
-        if (!isValidEmail(parsedData.buyerEmail)) {
+        // 3. Validar email (exceto para cancelamentos que podem vir sem email)
+        const isCancellation = payload.event === 'SUBSCRIPTION_CANCELLATION' || payload.event === 'PURCHASE_CANCELED';
+        if (!isValidEmail(parsedData.buyerEmail) && !isCancellation) {
             console.error('❌ Email inválido:', parsedData.buyerEmail);
             return NextResponse.json(
                 { error: 'Invalid email' },
@@ -104,6 +105,11 @@ export async function POST(request: NextRequest) {
 // ============================================
 
 async function handlePurchaseApproved(data: any) {
+    if (!isValidEmail(data.buyerEmail)) {
+        console.error('❌ Email inválido para aprovação:', data.buyerEmail);
+        throw new Error('Email is required for APPROVED events');
+    }
+
     console.log('✅ Processando compra aprovada:', data.transactionId);
 
     try {
@@ -143,22 +149,25 @@ async function handlePurchaseApproved(data: any) {
             console.log('🔄 Acesso renovado para usuário existente:', user.id);
         }
 
-        // Sanitizar datas antes de salvar (dados de teste da Hotmart podem ter datas inválidas)
+        // Sanitizar datas antes de salvar
         const sanitizeDate = (date: Date | undefined): Date | undefined => {
             if (!date) return undefined;
             const year = date.getFullYear();
-            // Se ano for > 3000 ou < 1900, usar data atual
-            if (year > 3000 || year < 1900) {
-                console.warn('⚠️ Data inválida detectada, usando data atual');
-                return new Date();
-            }
+            if (year > 3000 || year < 1900) return new Date();
             return date;
         };
 
-        // Registrar a compra com datas sanitizadas
+        // Registrar ou atualizar a compra (Upsert)
         try {
-            await prisma.purchase.create({
-                data: {
+            await prisma.purchase.upsert({
+                where: { hotmartTransactionId: data.transactionId },
+                update: {
+                    status: data.status,
+                    approvedDate: sanitizeDate(data.approvedDate),
+                    subscriptionStatus: data.subscriptionStatus,
+                    metadata: data.rawData,
+                },
+                create: {
                     userId: user.id,
                     hotmartTransactionId: data.transactionId,
                     hotmartProductId: data.productId,
@@ -176,10 +185,8 @@ async function handlePurchaseApproved(data: any) {
                     metadata: data.rawData,
                 },
             });
-            console.log('💾 Compra registrada no banco de dados');
+            console.log('💾 Compra registrada/atualizada no banco de dados');
         } catch (purchaseError) {
-            // Se falhar ao criar purchase, logar mas não falhar todo o processo
-            // O importante é que o usuário foi criado/ativado
             console.error('⚠️ Erro ao registrar compra (usuário já foi ativado):', purchaseError);
         }
 
@@ -197,28 +204,53 @@ async function handlePurchaseCanceled(data: any) {
     console.log('❌ Processando cancelamento:', data.transactionId);
 
     try {
-        const user = await prisma.user.findUnique({
-            where: { email: data.buyerEmail },
-        });
+        let user;
+
+        // Tentar encontrar por email se válido
+        if (isValidEmail(data.buyerEmail)) {
+            user = await prisma.user.findUnique({
+                where: { email: data.buyerEmail },
+            });
+        }
+
+        // Se não achou por email, tentar encontrar por transação ou assinatura
+        if (!user) {
+            console.log('🔍 Buscando usuário por transação anterior ou assinatura...');
+            const purchase = await prisma.purchase.findFirst({
+                where: {
+                    OR: [
+                        { hotmartTransactionId: data.transactionId },
+                        { subscriptionId: data.transactionId } // Fallback ID pode ser a assinatura
+                    ]
+                },
+                include: { user: true }
+            });
+
+            if (purchase) {
+                user = purchase.user;
+                console.log('✅ Usuário encontrado via histórico de compra:', user.email);
+            }
+        }
 
         if (!user) {
-            console.warn('⚠️ Usuário não encontrado para cancelamento:', data.buyerEmail);
+            console.warn('⚠️ Usuário não encontrado para cancelamento. Email:', data.buyerEmail, 'ID:', data.transactionId);
             return;
         }
 
         // Desativar acesso
         await deactivateAccess(user.id, 'canceled');
 
-        // Atualizar registro da compra
-        await prisma.purchase.updateMany({
-            where: {
-                userId: user.id,
-                hotmartTransactionId: data.transactionId,
-            },
-            data: {
-                status: 'CANCELED',
-            },
+        // Atualizar registro da compra se existir
+        const purchaseExists = await prisma.purchase.findUnique({
+            where: { hotmartTransactionId: data.transactionId }
         });
+
+        if (purchaseExists) {
+            await prisma.purchase.update({
+                where: { hotmartTransactionId: data.transactionId },
+                data: { status: 'CANCELED' }
+            });
+        }
 
         console.log('🔴 Acesso cancelado:', user.id);
 
