@@ -3,11 +3,21 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import styles from '../../styles/Register.module.css';
+import { useLanguage } from '../../context/LanguageContext';
+
 export default function AdminSignInPage() {
+    const { language, setLanguage } = useLanguage();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+
+    const toggleLanguage = () => {
+        const languages: Array<'pt' | 'en' | 'es'> = ['en', 'pt', 'es'];
+        const currentIndex = languages.indexOf(language);
+        const nextIndex = (currentIndex + 1) % languages.length;
+        setLanguage(languages[nextIndex]);
+    };
 
     const handleSignIn = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -61,6 +71,13 @@ export default function AdminSignInPage() {
                     alt="Background"
                     className={styles['background-image']}
                 />
+            </div>
+
+            {/* Language Button (Absolute Top Right) */}
+            <div style={{ position: 'absolute', top: '2rem', right: '2rem', zIndex: 10 }}>
+                <button onClick={toggleLanguage} className={styles['header-btn']} style={{ background: 'rgba(255, 255, 255, 0.2)', border: 'none', cursor: 'pointer', color: 'white', fontWeight: 'bold' }}>
+                    {language.toUpperCase()}
+                </button>
             </div>
 
             {/* Main Content */}
