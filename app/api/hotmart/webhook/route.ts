@@ -240,6 +240,15 @@ async function handlePurchaseCanceled(data: any) {
         // Desativar acesso
         await deactivateAccess(user.id, 'canceled');
 
+        // FORÇAR atualização no user também (Redundância necessária)
+        await prisma.user.update({
+            where: { id: user.id },
+            data: {
+                subscriptionStatus: 'canceled',
+                hasActiveSubscription: false
+            } as any
+        });
+
         // Atualizar registro da compra se existir
         const purchaseExists = await prisma.purchase.findUnique({
             where: { hotmartTransactionId: data.transactionId }
@@ -252,7 +261,7 @@ async function handlePurchaseCanceled(data: any) {
             });
         }
 
-        console.log('🔴 Acesso cancelado:', user.id);
+        console.log('🔴 Acesso cancelado (Forçado):', user.id);
 
     } catch (error) {
         console.error('❌ Erro ao processar cancelamento:', error);
@@ -281,6 +290,15 @@ async function handlePurchaseRefunded(data: any) {
         const reason = data.status === 'CHARGEBACK' ? 'chargeback' : 'refunded';
         await deactivateAccess(user.id, reason);
 
+        // FORÇAR atualização no user também (Redundância necessária)
+        await prisma.user.update({
+            where: { id: user.id },
+            data: {
+                subscriptionStatus: reason,
+                hasActiveSubscription: false
+            } as any
+        });
+
         // Atualizar registro da compra
         await prisma.purchase.updateMany({
             where: {
@@ -293,7 +311,7 @@ async function handlePurchaseRefunded(data: any) {
             },
         });
 
-        console.log('💰 Reembolso processado:', user.id);
+        console.log('💰 Reembolso processado (Forçado):', user.id);
 
     } catch (error) {
         console.error('❌ Erro ao processar reembolso:', error);

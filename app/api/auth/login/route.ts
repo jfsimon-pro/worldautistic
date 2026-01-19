@@ -19,11 +19,11 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // Buscar usuário
+        // Buscar usuário e validação rigorosa de assinatura
         console.log('🔍 [LOGIN API] Buscando usuário...');
         const user = await prisma.user.findUnique({
             where: { email },
-        });
+        }) as any; // Casting to any to avoid TS errors with potentially outdated client generation
 
         // 1. Verifica se usuário existe
         if (!user) {
@@ -37,21 +37,30 @@ export async function POST(request: NextRequest) {
         console.log('✅ [LOGIN API] Usuário encontrado:', user.id);
         console.log('📊 [LOGIN API] Status Assinatura:', user.subscriptionStatus);
         console.log('⏳ [LOGIN API] Tem Assinatura Ativa:', user.hasActiveSubscription);
+        console.log('📅 [LOGIN API] Expira em:', user.subscriptionExpiresAt);
 
-        // 2. Verifica se tem assinatura ativa (Substitui senha)
-        // Admin sempre pode logar, usuários precisam de assinatura
-        if (user.role !== 'ADMIN' && !user.hasActiveSubscription) {
-            console.log('❌ [LOGIN API] Acesso negado: sem assinatura ativa');
-            return NextResponse.json(
-                {
-                    error: 'Assinatura necessária',
-                    details: 'subscription_required'
-                },
-                { status: 403 }
-            );
+        // 2. Validação RIGOROSA de status da assinatura (Exceto Admin)
+        if (user.role !== 'ADMIN') {
+            const isStatusActive = user.subscriptionStatus === 'active';
+            const isNotExpired = user.subscriptionExpiresAt ? new Date(user.subscriptionExpiresAt) > new Date() : false;
+
+            // A flag hasActiveSubscription é apenas um cache, a verdade está no status e data
+            const isValidAccess = isStatusActive && isNotExpired;
+
+            if (!isValidAccess) {
+                console.log('❌ [LOGIN API] Acesso negado: assinatura inválida, expirada ou cancelada');
+                console.log(`Diagnostic: Status=${user.subscriptionStatus}, Expired=${!isNotExpired}`);
+                return NextResponse.json(
+                    {
+                        error: 'Assinatura necessária ou expirada',
+                        details: 'subscription_required'
+                    },
+                    { status: 403 }
+                );
+            }
         }
 
-        console.log('✅ [LOGIN API] Acesso autorizado (Assinatura Ativa)');
+        console.log('✅ [LOGIN API] Acesso autorizado (Validação Rigorosa Ok)');
 
         // Gerar tokens JWT
         console.log('🎫 [LOGIN API] Gerando tokens...');
