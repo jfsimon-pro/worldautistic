@@ -9,6 +9,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     const menuItems = [
         { name: 'Dashboard', href: '/admin', icon: '📊' },
         { name: 'Usuários', href: '/admin/users', icon: '👥' },
+        { name: 'Compras', href: '/admin/purchases', icon: '💳' },
         { name: 'Cores', href: '/admin/content/colors', icon: '🎨' },
         { name: 'Animais', href: '/admin/content/animals', icon: '🦁' },
         { name: 'Alimentos', href: '/admin/content/food', icon: '🍎' },

@@ -32,12 +32,18 @@ model User {
   language      String    @default("pt") // pt, en, es
   soundEnabled  Boolean   @default(true)
   
+  // Hotmart Integration - Controle de Assinatura
+  subscriptionStatus    String?   @default("inactive") // active, inactive, canceled, refunded
+  subscriptionExpiresAt DateTime? // Data de expiração do acesso
+  hasActiveSubscription Boolean   @default(false) // Campo computed para facilitar queries
+  
   // Progressos e atividades
   activityProgress    ActivityProgress[]
   gameProgress        GameProgress[]
   userStreaks         UserStreak[]
   achievements        UserAchievement[]
   refreshTokens       RefreshToken[]
+  purchases           Purchase[] // Histórico de compras Hotmart
   
   // Timestamps
   createdAt     DateTime  @default(now())
@@ -46,6 +52,8 @@ model User {
 
   @@index([email])
   @@index([role])
+  @@index([subscriptionStatus])
+  @@index([hasActiveSubscription])
 }
 
 // Refresh Tokens para autenticação JWT
@@ -60,6 +68,62 @@ model RefreshToken {
   @@index([userId])
   @@index([token])
   @@index([expiresAt])
+}
+
+// ============================================
+// 💳 HOTMART INTEGRATION - COMPRAS
+// ============================================
+
+enum PurchaseStatus {
+  APPROVED      // Compra aprovada
+  COMPLETE      // Pagamento completado
+  CANCELED      // Cancelada
+  REFUNDED      // Reembolsada
+  CHARGEBACK    // Chargeback
+  EXPIRED       // Expirada
+}
+
+model Purchase {
+  id                    String         @id @default(cuid())
+  userId                String
+  user                  User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Dados da transação Hotmart
+  hotmartTransactionId  String         @unique
+  hotmartProductId      String
+  productName           String
+  
+  // Dados do comprador (podem ser diferentes do cadastro)
+  buyerEmail            String
+  buyerName             String
+  buyerDocument         String?        // CPF/CNPJ
+  
+  // Valores
+  amount                Float          // Valor pago
+  currency              String         @default("BRL")
+  
+  // Status e datas
+  status                PurchaseStatus @default(APPROVED)
+  purchaseDate          DateTime
+  approvedDate          DateTime?
+  refundedDate          DateTime?
+  
+  // Assinatura (se recorrente)
+  isRecurrent           Boolean        @default(false)
+  subscriptionId        String?
+  subscriptionStatus    String?        // active, cancelled, suspended
+  
+  // Metadados adicionais em JSON
+  metadata              Json?          // Dados extras do webhook
+  
+  // Timestamps
+  createdAt             DateTime       @default(now())
+  updatedAt             DateTime       @updatedAt
+  
+  @@index([userId])
+  @@index([hotmartTransactionId])
+  @@index([status])
+  @@index([purchaseDate])
 }
 
 // ============================================
