@@ -23,11 +23,15 @@ export default function HomePage() {
 
                 {/* Header Logo */}
                 <div className={styles['header-logo']}>
-                    <span className={styles['header-text']}>WORLD<br />AUTISTIC</span>
                     <img
-                        src="/images/puzzle.png"
+                        src="/images/logo-small.png"
+                        alt="World Autistic"
+                        className={styles['logo-small']}
+                    />
+                    <img
+                        src="/images/logonova.png"
                         alt="Puzzle"
-                        className={styles['puzzle-icon']}
+                        className={styles['logo-new']}
                     />
                 </div>
 

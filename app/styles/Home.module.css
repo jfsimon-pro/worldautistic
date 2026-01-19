@@ -47,8 +47,16 @@
     letter-spacing: 2px;
 }
 
-.puzzle-icon {
-    width: 7rem;
+.puzzle-icon,
+.logo-small {
+    width: 6rem;
+    height: auto;
+    object-fit: contain;
+}
+
+.logo-new {
+    width: 5rem;
+    /* Adjust size as needed */
     height: auto;
     object-fit: contain;
 }

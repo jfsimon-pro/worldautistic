@@ -94,9 +94,9 @@ export default function SignInPage() {
             className={styles['logo-small']}
           />
           <img
-            src="/images/puzzle.png"
-            alt="Puzzle Piece"
-            className={styles['puzzle-piece']}
+            src="/images/logonova.png"
+            alt="Puzzle"
+            className={styles['logo-new']}
           />
         </div>
 

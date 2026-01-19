@@ -97,6 +97,13 @@
     object-fit: contain;
 }
 
+.logo-new {
+    width: 5rem;
+    /* Adjust size as needed, starting with 20rem */
+    height: auto;
+    object-fit: contain;
+}
+
 .blue-card {
     width: 100%;
     background-color: #81D4FA;
