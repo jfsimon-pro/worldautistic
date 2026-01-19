@@ -321,7 +321,30 @@ async function handlePurchaseRefunded(data: any) {
         });
 
         if (updateResult.count === 0) {
-            console.warn('⚠️ Nenhuma compra encontrada para atualizar no reembolso:', data.transactionId, data.subscriptionId);
+            console.warn('⚠️ Nenhuma compra encontrada por ID exato/Assinatura. Tentando fallback para última compra aprovada...');
+
+            // Fallback: Pegar a última compra aprovada do usuário
+            // Útil para vendas avulsas onde o ID da transação de reembolso pode diferir
+            const lastPurchase = await prisma.purchase.findFirst({
+                where: {
+                    userId: user.id,
+                    status: { in: ['APPROVED', 'COMPLETE'] }
+                },
+                orderBy: { createdAt: 'desc' }
+            });
+
+            if (lastPurchase) {
+                await prisma.purchase.update({
+                    where: { id: lastPurchase.id },
+                    data: {
+                        status: data.status,
+                        refundedDate: new Date(),
+                    }
+                });
+                console.log(`💰 Fallback: Compra ${lastPurchase.hotmartTransactionId} marcada como ${data.status}`);
+            } else {
+                console.warn('⚠️ Fallback falhou: Nenhuma compra aprovada encontrada para este usuário.');
+            }
         } else {
             console.log(`💰 Status da compra atualizado para ${data.status} (${updateResult.count} registros)`);
         }
