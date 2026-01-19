@@ -59,12 +59,32 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'Email já está na whitelist' }, { status: 400 });
         }
 
+        // 1. Adicionar na Whitelist
         const newEntry = await (prisma as any).whitelist.create({
             data: {
                 email: normalizedEmail,
                 note
             }
         });
+
+        // 2. Garantir que o USER existe no banco principal
+        const userExists = await prisma.user.findUnique({
+            where: { email: normalizedEmail }
+        });
+
+        if (!userExists) {
+            console.log('👤 [WHITELIST] Criando usuário novo para:', normalizedEmail);
+            await prisma.user.create({
+                data: {
+                    email: normalizedEmail,
+                    name: normalizedEmail.split('@')[0],
+                    role: 'USER',
+                    subscriptionStatus: 'active',
+                    hasActiveSubscription: true,
+                    subscriptionExpiresAt: new Date(new Date().setFullYear(new Date().getFullYear() + 10))
+                } as any
+            });
+        }
 
         return NextResponse.json(newEntry);
 
