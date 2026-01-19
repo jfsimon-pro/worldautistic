@@ -20,7 +20,13 @@
         "entering": "Signing in...",
         "requestAccess": "Request access",
         "emailRequired": "Email and password are required",
-        "loginError": "Login failed. Please try again."
+        "loginError": "Login failed. Please try again.",
+        "subscriberAccess": "Subscriber Access",
+        "enterEmailDescription": "Enter the email used in your Hotmart purchase to sign in.",
+        "emailPlaceholder": "example@email.com",
+        "subscriptionRequired": "Subscription required. Check your purchase email.",
+        "verifying": "Verifying...",
+        "enterNow": "Enter Now"
     },
     "register": {
         "name": "Name",

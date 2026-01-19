@@ -48,7 +48,7 @@ export default function SignInPage() {
       if (!response.ok) {
         console.log('❌ [LOGIN] Response não OK:', data.error);
         if (data.details === 'subscription_required') {
-          throw new Error('Assinatura necessária. Verifique seu email de compra.');
+          throw new Error(t('signIn.subscriptionRequired'));
         }
         throw new Error(data.error || t('signIn.loginError'));
       }
@@ -140,9 +140,9 @@ export default function SignInPage() {
         <div className={styles['blue-card']}>
 
           <div style={{ textAlign: 'center', marginBottom: '1.5rem', color: 'white' }}>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '0.5rem' }}>Acesso de Assinante</h2>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '0.5rem' }}>{t('signIn.subscriberAccess')}</h2>
             <p style={{ fontSize: '0.9rem', opacity: 0.9 }}>
-              Digite o email usado na compra da Hotmart para entrar.
+              {t('signIn.enterEmailDescription')}
             </p>
           </div>
 
@@ -155,7 +155,7 @@ export default function SignInPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className={styles['form-input']}
-                placeholder="exemplo@email.com"
+                placeholder={t('signIn.emailPlaceholder')}
               />
             </div>
 
@@ -182,7 +182,7 @@ export default function SignInPage() {
               disabled={loading}
               style={{ opacity: loading ? 0.6 : 1, cursor: loading ? 'not-allowed' : 'pointer', marginTop: '1rem' }}
             >
-              {loading ? 'Verificando...' : 'Entrar Agora'}
+              {loading ? t('signIn.verifying') : t('signIn.enterNow')}
             </button>
 
           </form>

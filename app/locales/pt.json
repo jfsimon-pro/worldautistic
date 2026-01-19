@@ -20,7 +20,13 @@
         "entering": "Entrando...",
         "requestAccess": "Solicitar acesso",
         "emailRequired": "Email e senha são obrigatórios",
-        "loginError": "Erro ao fazer login. Tente novamente."
+        "loginError": "Erro ao fazer login. Tente novamente.",
+        "subscriberAccess": "Acesso de Assinante",
+        "enterEmailDescription": "Digite o email usado na compra da Hotmart para entrar.",
+        "emailPlaceholder": "exemplo@email.com",
+        "subscriptionRequired": "Assinatura necessária. Verifique seu email de compra.",
+        "verifying": "Verificando...",
+        "enterNow": "Entrar Agora"
     },
     "register": {
         "name": "Nome",
