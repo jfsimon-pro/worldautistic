@@ -82,15 +82,15 @@ export default function HomePage() {
                         </div>
                     </Link>
 
-                    {/* Ebooks Card (Large) */}
-                    <Link href="/ebooks" className={`${styles['home-card']} ${styles['card-large']} ${styles['card-ebooks']}`}>
+                    {/* Ebooks Card (Large) - Disabled */}
+                    <div className={`${styles['home-card']} ${styles['card-large']} ${styles['card-ebooks']} ${styles['card-disabled']}`}>
                         <div className={styles['card-content']}>
                             <div className={styles['card-title']}>{t('home.ebooks')}</div>
                         </div>
                         <div className={styles['card-image-wrapper']}>
                             <img src="/images/spaceman-ebook.png" alt={t('home.ebooks')} className={styles['card-image']} />
                         </div>
-                    </Link>
+                    </div>
 
                 </div>
             </PageLayout>

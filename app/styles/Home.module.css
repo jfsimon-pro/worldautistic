@@ -134,6 +134,12 @@
     border: 4px solid #1E3A5F;
 }
 
+.card-disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
 .card-content {
     display: flex;
     flex-direction: column;
