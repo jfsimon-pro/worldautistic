@@ -45,7 +45,8 @@
         "activities": "Actividades",
         "voiceCommands": "Comandos de Voz",
         "soundFrequencies": "Frecuencias Sonoras",
-        "games": "Juegos"
+        "games": "Juegos",
+        "ebooks": "Ebooks"
     },
     "settings": {
         "title": "Configuración",

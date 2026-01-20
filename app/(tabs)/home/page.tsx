@@ -82,6 +82,16 @@ export default function HomePage() {
                         </div>
                     </Link>
 
+                    {/* Ebooks Card (Large) */}
+                    <Link href="/ebooks" className={`${styles['home-card']} ${styles['card-large']} ${styles['card-ebooks']}`}>
+                        <div className={styles['card-content']}>
+                            <div className={styles['card-title']}>{t('home.ebooks')}</div>
+                        </div>
+                        <div className={styles['card-image-wrapper']}>
+                            <img src="/images/spaceman-ebook.png" alt={t('home.ebooks')} className={styles['card-image']} />
+                        </div>
+                    </Link>
+
                 </div>
             </PageLayout>
         </AuthGuard>

@@ -129,6 +129,11 @@
     border: 4px solid #2B753F;
 }
 
+.card-ebooks {
+    background: linear-gradient(135deg, #4A6FA5 0%, #2C4875 100%);
+    border: 4px solid #1E3A5F;
+}
+
 .card-content {
     display: flex;
     flex-direction: column;
@@ -162,7 +167,8 @@
 
 .card-commands .card-title,
 .card-frequencies .card-title,
-.card-games .card-title {
+.card-games .card-title,
+.card-ebooks .card-title {
     color: white;
 }
 
