@@ -4,7 +4,7 @@ import PageLayout from '../../components/PageLayout';
 import AuthGuard from '../../components/AuthGuard';
 import styles from '../../styles/Ebooks.module.css';
 import { useTranslation } from '../../context/LanguageContext';
-import Link from 'next/link';
+
 
 export default function EbooksPage() {
     const { t } = useTranslation();
