@@ -9,28 +9,7 @@ import { useTranslation } from '../../context/LanguageContext';
 export default function EbooksPage() {
     const { t } = useTranslation();
 
-    const ebooks = [
-        {
-            key: 'manual',
-            style: styles['card-manual'],
-            icon: '/images/book-icon.png' // Utilizing a generic icon for now or I can reuse spaceman if available
-        },
-        {
-            key: 'guide',
-            style: styles['card-guide'],
-            icon: '/images/book-icon.png'
-        },
-        {
-            key: 'bcaa',
-            style: styles['card-bcaa'],
-            icon: '/images/pill-icon.png' // Placeholder, will check if specific icons exist or use generic
-        },
-        {
-            key: 'calming',
-            style: styles['card-calming'],
-            icon: '/images/heart-icon.png' // Placeholder
-        }
-    ];
+
 
     // Using the spaceman images from home as fallbacks if specific icons aren't available yet, 
     // or just hiding the icon if not present. 
