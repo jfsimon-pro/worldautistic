@@ -48,6 +48,12 @@
         "games": "Games",
         "ebooks": "Ebooks"
     },
+    "ebooks": {
+        "foodSelectivity": "Food Selectivity Manual",
+        "guideToAutism": "Guide to Autism",
+        "bcaaRegulator": "BCAA Regulator",
+        "calmingPackage": "Immediate Calming Package"
+    },
     "settings": {
         "title": "Settings",
         "language": "Language",
