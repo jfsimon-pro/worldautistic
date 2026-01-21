@@ -37,7 +37,7 @@
 .language-btn {
     width: 3rem;
     height: 3rem;
-    background-color: #FFE500;
+    background-color: #FFD700 !important;
     border: none;
     border-radius: 0.75rem;
     border-bottom: 4px solid #F1B812;
@@ -48,6 +48,8 @@
     justify-content: center;
     cursor: pointer;
     transition: transform 0.1s;
+    color: #6f5300 !important;
+    font-weight: bold;
 }
 
 .language-btn:hover {

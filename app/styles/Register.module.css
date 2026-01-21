@@ -42,7 +42,7 @@
 .header-btn {
     width: 3rem;
     height: 3rem;
-    background-color: #FFE500;
+    background-color: #FFD700 !important;
     border: none;
     border-radius: 0.75rem;
     border-bottom: 4px solid #F1B812;
@@ -54,6 +54,8 @@
     cursor: pointer;
     transition: transform 0.1s;
     pointer-events: auto;
+    color: #6f5300 !important;
+    font-weight: bold;
 }
 
 .header-btn:hover {
@@ -67,7 +69,7 @@
 .header-icon {
     width: 1.5rem;
     height: 1.5rem;
-    color: black;
+    color: #6f5300;
 }
 
 .main-content {

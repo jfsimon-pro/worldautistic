@@ -76,7 +76,7 @@ export default function SignInPage() {
 
       {/* Language Button */}
       <div className={styles['language-btn-container']}>
-        <button onClick={toggleLanguage} className={styles['language-btn']} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
+        <button onClick={toggleLanguage} className={styles['language-btn']}>
           {language.toUpperCase()}
           {/* You can keep the icon if you want, or just text */}
         </button>

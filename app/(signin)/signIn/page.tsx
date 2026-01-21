@@ -113,7 +113,7 @@ export default function SignInPage() {
         </Link>
 
         {/* Language Button */}
-        <button onClick={toggleLanguage} className={styles['header-btn']} style={{ background: 'rgba(255, 255, 255, 0.2)', border: 'none', cursor: 'pointer', color: 'white', fontWeight: 'bold' }}>
+        <button onClick={toggleLanguage} className={styles['header-btn']}>
           {language.toUpperCase()}
         </button>
 
