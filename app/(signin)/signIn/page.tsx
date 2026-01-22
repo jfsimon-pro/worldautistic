@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import styles from '../../styles/Register.module.css';
 import { useLanguage } from '../../context/LanguageContext';
@@ -10,6 +10,13 @@ export default function SignInPage() {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    const savedEmail = localStorage.getItem('userEmail');
+    if (savedEmail) {
+      setEmail(savedEmail);
+    }
+  }, []);
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,6 +32,7 @@ export default function SignInPage() {
       return;
     }
 
+    localStorage.setItem('userEmail', email);
     setLoading(true);
     console.log('⏳ [LOGIN] Loading = true');
 
