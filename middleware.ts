@@ -11,13 +11,42 @@ export async function middleware(request: NextRequest) {
     const isProtected = protectedPaths.some(path => pathname.startsWith(path));
     const isAdminPath = adminPaths.some(path => pathname.startsWith(path));
 
-    // Rotas públicas
-    if (!isProtected && !isAdminPath) {
+    // Rotas de autenticação que devem redirecionar se o usuário já estiver logado
+    const authPaths = ['/', '/signIn', '/register'];
+    const isAuthPath = authPaths.some(path => pathname === path);
+
+    // Se não é protegida, nem admin, nem auth path, deixa passar
+    if (!isProtected && !isAdminPath && !isAuthPath) {
         return NextResponse.next();
     }
 
     // Pegar access token do cookie
     const token = request.cookies.get('accessToken')?.value;
+
+    // Se for rota pública de auth (login/home page)
+    if (isAuthPath) {
+        // Se não tem token, deixa entrar na página de login
+        if (!token) {
+            return NextResponse.next();
+        }
+
+        // Se tem token, verifica se é válido
+        const payload = await verifyAccessToken(token);
+
+        // Se token inválido, deixa entrar (vai provavelmente falhar depois ou limpar o cookie, mas aqui deixa o acesso)
+        if (!payload) {
+            return NextResponse.next();
+        }
+
+        // Se token válido, redireciona para dentro do app
+        const url = request.nextUrl.clone();
+        if (payload.role === 'ADMIN') {
+            url.pathname = '/admin';
+        } else {
+            url.pathname = '/home';
+        }
+        return NextResponse.redirect(url);
+    }
 
     if (!token) {
         const url = request.nextUrl.clone();
@@ -47,6 +76,9 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
     matcher: [
+        '/',
+        '/signIn',
+        '/register',
         '/home/:path*',
         '/activities/:path*',
         '/animals/:path*',
