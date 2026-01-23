@@ -12,6 +12,30 @@ export default function SignInPage() {
   const [error, setError] = useState('');
 
   useEffect(() => {
+    // Verificar se o usuário já está autenticado
+    const checkAuth = async () => {
+      try {
+        const response = await fetch('/api/auth/me', {
+          credentials: 'include',
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          // Usuário já autenticado, redirecionar para a página apropriada
+          if (data.user.role === 'ADMIN') {
+            window.location.href = '/admin';
+          } else {
+            window.location.href = '/home';
+          }
+        }
+      } catch (error) {
+        // Usuário não autenticado, continuar na página de sign-in
+        console.log('Usuário não autenticado');
+      }
+    };
+
+    checkAuth();
+
     const savedEmail = localStorage.getItem('userEmail');
     if (savedEmail) {
       setEmail(savedEmail);

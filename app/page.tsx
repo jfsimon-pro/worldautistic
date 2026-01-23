@@ -18,6 +18,30 @@ export default function SignInPage() {
   const [showIOSInstructions, setShowIOSInstructions] = useState(false);
 
   useEffect(() => {
+    // Verificar se o usuário está autenticado
+    const checkAuth = async () => {
+      try {
+        const response = await fetch('/api/auth/me', {
+          credentials: 'include',
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          // Usuário autenticado, redirecionar para a página apropriada
+          if (data.user.role === 'ADMIN') {
+            window.location.href = '/admin';
+          } else {
+            window.location.href = '/home';
+          }
+        }
+      } catch (error) {
+        // Usuário não autenticado, continuar na página de login
+        console.log('Usuário não autenticado');
+      }
+    };
+
+    checkAuth();
+
     // Detectar iOS
     const isIOSDevice = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
     setIsIOS(isIOSDevice);
