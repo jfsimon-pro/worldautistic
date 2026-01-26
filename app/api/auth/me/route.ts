@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
         if (shouldRefresh) {
             console.log('🔄 [ME API] Access Token expirado ou ausente. Tentando Refresh...');
             const { getRefreshTokenFromRequest, setAuthCookies } = await import('@/app/lib/cookies');
-            const { verifyRefreshToken, generateAccessToken, generateRefreshToken, getRefreshTokenExpiration } = await import('@/app/lib/auth');
+            const { verifyRefreshToken, generateAccessToken, getRefreshTokenExpiration } = await import('@/app/lib/auth');
 
             const refreshToken = getRefreshTokenFromRequest(request);
 
