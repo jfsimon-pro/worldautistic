@@ -62,25 +62,49 @@ export default function SignInPage() {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
       setShowInstallButton(true);
+      console.log('✅ PWA Install Prompt captured');
     };
 
     window.addEventListener('beforeinstallprompt', handler);
+
+    // Fallback para Desktop (Mac/Windows) onde o evento pode não disparar automaticamente
+    // ou para navegadores que não suportam o evento (Safari/Firefox) mas suportam PWA
+    const userAgent = window.navigator.userAgent.toLowerCase();
+    const isDesktop = !/android|iphone|ipad|ipod/.test(userAgent);
+
+    if (isDesktop && !isStandalone) {
+      // Mostrar o botão mesmo sem o evento, para instruir instalação manual
+      setShowInstallButton(true);
+    }
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handler);
     };
   }, []);
 
-  const handleInstallClick = async () => {
-    if (!deferredPrompt) return;
-
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-
-    if (outcome === 'accepted') {
-      setShowInstallButton(false);
+  // Debug i18n
+  useEffect(() => {
+    if (showIOSInstructions) {
+      console.log('📱 iOS Instructions - Language:', language);
+      console.log('📱 Title translation:', t('ios.title'));
     }
-    setDeferredPrompt(null);
+  }, [showIOSInstructions, language, t]);
+
+  const handleInstallClick = async () => {
+    if (deferredPrompt) {
+      // Se temos o evento nativo (Chrome/Edge)
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        setShowInstallButton(false);
+      }
+      setDeferredPrompt(null);
+    } else {
+      // Fallback: Mostrar instruções de instalação manual
+      // Se for iOS (já tratado pelo isIOS)
+      // Se for Desktop (Chrome/Safari)
+      alert('Para instalar:\n\nChrome: Clique no ícone de instalar na barra de endereços URL (canto direito).\n\nSafari: Arquivo > Adicionar ao Dock.\n\nEdge: Menu > Apps > Instalar.');
+    }
   };
 
   const handleIOSInstallClick = () => {
@@ -166,11 +190,11 @@ export default function SignInPage() {
       {showIOSInstructions && (
         <div className={styles['ios-modal-overlay']} onClick={() => setShowIOSInstructions(false)}>
           <div className={styles['ios-modal']} onClick={(e) => e.stopPropagation()}>
-            <h3 className={styles['ios-modal-title']}>📱 Instalar no iPhone/iPad</h3>
+            <h3 className={styles['ios-modal-title']}>📱 {t('ios.title')}</h3>
             <div className={styles['ios-steps']}>
               <div className={styles['ios-step']}>
                 <span className={styles['ios-step-number']}>1</span>
-                <span>Toque no ícone de <strong>Compartilhar</strong></span>
+                <span>{t('ios.step1')} <strong>{t('ios.action1')}</strong></span>
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
                   <polyline points="16 6 12 2 8 6" />
@@ -179,18 +203,18 @@ export default function SignInPage() {
               </div>
               <div className={styles['ios-step']}>
                 <span className={styles['ios-step-number']}>2</span>
-                <span>Role e toque em <strong>"Adicionar à Tela de Início"</strong></span>
+                <span>{t('ios.step2')} <strong>"{t('ios.action2')}"</strong></span>
               </div>
               <div className={styles['ios-step']}>
                 <span className={styles['ios-step-number']}>3</span>
-                <span>Toque em <strong>"Adicionar"</strong></span>
+                <span>{t('ios.step3')} <strong>"{t('ios.action3')}"</strong></span>
               </div>
             </div>
             <button
               className={styles['ios-modal-close']}
               onClick={() => setShowIOSInstructions(false)}
             >
-              Entendi!
+              {t('ios.understood')}
             </button>
           </div>
         </div>

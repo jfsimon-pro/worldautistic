@@ -64,6 +64,29 @@ export async function POST(request: NextRequest) {
         const accessToken = await generateAccessToken(user.id, user.role);
         const refreshToken = await generateRefreshToken(user.id);
 
+        // Limite de Sessões Simultâneas (Admin)
+        const MAX_SESSIONS = 2;
+
+        const activeTokens = await prisma.refreshToken.findMany({
+            where: { userId: user.id },
+            orderBy: { createdAt: 'asc' },
+            select: { id: true }
+        });
+
+        if (activeTokens.length >= MAX_SESSIONS) {
+            console.log(`⚠️ [ADMIN LOGIN API] Limite de sessões atingido (${activeTokens.length}/${MAX_SESSIONS}). Removendo antigas...`);
+            const tokensToRemoveCount = activeTokens.length - MAX_SESSIONS + 1;
+            const tokensToRemove = activeTokens.slice(0, tokensToRemoveCount);
+            const idsToRemove = tokensToRemove.map(t => t.id);
+
+            if (idsToRemove.length > 0) {
+                await prisma.refreshToken.deleteMany({
+                    where: { id: { in: idsToRemove } }
+                });
+                console.log(`🚫 [ADMIN LOGIN API] ${idsToRemove.length} tokens antigos removidos.`);
+            }
+        }
+
         // Salvar refresh token no banco
         await prisma.refreshToken.create({
             data: {

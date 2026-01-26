@@ -148,5 +148,15 @@
         "rainSoundsAsCalmingBackground": "Chuva Calmante",
         "releaseOfFearsAndNegativeEmotions": "Liberação de Medos",
         "emotionalHarmony": "Harmonia Emocional"
+    },
+    "ios": {
+        "title": "Instalar no iPhone/iPad",
+        "step1": "Toque no ícone de",
+        "action1": "Compartilhar",
+        "step2": "Role e toque em",
+        "action2": "Adicionar à Tela de Início",
+        "step3": "Toque em",
+        "action3": "Adicionar",
+        "understood": "Entendi!"
     }
 }

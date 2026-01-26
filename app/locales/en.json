@@ -148,5 +148,15 @@
         "rainSoundsAsCalmingBackground": "Calming Rain",
         "releaseOfFearsAndNegativeEmotions": "Release of Fears",
         "emotionalHarmony": "Emotional Harmony"
+    },
+    "ios": {
+        "title": "Install on iPhone/iPad",
+        "step1": "Tap the",
+        "action1": "Share button",
+        "step2": "Scroll down and tap",
+        "action2": "Add to Home Screen",
+        "step3": "Tap",
+        "action3": "Add",
+        "understood": "Got it!"
     }
 }

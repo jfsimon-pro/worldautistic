@@ -49,6 +49,12 @@ export async function middleware(request: NextRequest) {
     }
 
     if (!token) {
+        // Se não tem Access Token, verificamos se tem Refresh Token antes de chutar
+        const refreshToken = request.cookies.get('refreshToken')?.value;
+        if (refreshToken) {
+            return NextResponse.next();
+        }
+
         const url = request.nextUrl.clone();
         url.pathname = '/signIn';
         return NextResponse.redirect(url);
@@ -58,6 +64,14 @@ export async function middleware(request: NextRequest) {
     const payload = await verifyAccessToken(token);
 
     if (!payload) {
+        // Se o Access Token expirou, verificamos se existe um Refresh Token
+        // Se existir, deixamos passar para que o endpoint/página tente fazer o refresh
+        const refreshToken = request.cookies.get('refreshToken')?.value;
+
+        if (refreshToken) {
+            return NextResponse.next();
+        }
+
         const url = request.nextUrl.clone();
         url.pathname = '/signIn';
         return NextResponse.redirect(url);

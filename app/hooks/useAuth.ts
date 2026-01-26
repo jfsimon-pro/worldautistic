@@ -31,6 +31,12 @@ export function useAuth() {
         try {
             const response = await fetch('/api/auth/me', {
                 credentials: 'include', // Incluir cookies
+                cache: 'no-store',
+                headers: {
+                    'Pragma': 'no-cache',
+                    'Cache-Control': 'no-cache, no-store, must-revalidate',
+                    'Expires': '0'
+                }
             });
 
             if (response.ok) {
