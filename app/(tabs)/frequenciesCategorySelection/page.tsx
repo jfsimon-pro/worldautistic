@@ -62,13 +62,13 @@ export default function FrequenciesCategorySelectionPage() {
 
                     <div className={styles.infoContentWrapper}>
                         <div className={styles.infoContentInner}>
-                            <p>🚨 Please follow the application instructions for the sound frequency schedule:</p>
+                            <p>🚨 Please follow the sound therapy usage instructions:</p>
                             <ul className={styles.infoList}>
-                                <li>The schedule should be followed daily at the suggested times.</li>
-                                <li>The listening period for the frequencies should be at least 30 minutes, but it may be extended up to 2 hours.</li>
-                                <li>The use of headphones is optional; if the child does not like them, use speakers with ambient sound placed close to the child.</li>
+                                <li>The chosen sound frequencies should be applied daily, according to the child's needs</li>
+                                <li>The listening period for each one should be at least 30 minutes, but may be extended up to 2 hours.</li>
+                                <li>The use of headphones is optional; if the child does not like them, use speakers with ambient sounds placed close to them.</li>
                             </ul>
-                            <p>The schedule can be adapted to the child’s daily routine, but it is essential that they receive sound frequency stimulation in the morning, in the afternoon, and before bedtime.</p>
+                            <p>The frequencies can be applied according to each child's routine, but it is essential that they receive stimulation in the morning, in the afternoon, and before bedtime.</p>
                             <p>If you have any questions, we are available through our support channels.</p>
                             <p>✨ We wish you great success on this journey!</p>
                         </div>
