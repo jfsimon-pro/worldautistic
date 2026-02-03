@@ -15,6 +15,7 @@ export async function GET(request: Request) {
         const status = searchParams.get('status');
         const limit = parseInt(searchParams.get('limit') || '50', 10);
         const offset = parseInt(searchParams.get('offset') || '0', 10);
+        const search = searchParams.get('q') || '';
 
         const where: any = {};
 
@@ -24,6 +25,13 @@ export async function GET(request: Request) {
 
         if (status) {
             where.status = status;
+        }
+
+        if (search) {
+            where.OR = [
+                { buyerName: { contains: search, mode: 'insensitive' } },
+                { buyerEmail: { contains: search, mode: 'insensitive' } },
+            ];
         }
 
         const [purchases, total] = await Promise.all([

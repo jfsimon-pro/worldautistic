@@ -16,15 +16,23 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({ error: 'Acesso negado' }, { status: 403 });
         }
 
-        // Paginação
         const { searchParams } = new URL(request.url);
         const page = parseInt(searchParams.get('page') || '1');
-        const limit = parseInt(searchParams.get('limit') || '10');
+        const limit = parseInt(searchParams.get('limit') || '50');
+        const search = searchParams.get('q') || '';
         const skip = (page - 1) * limit;
 
-        // Buscar usuários
+        const where: any = {};
+        if (search) {
+            where.OR = [
+                { name: { contains: search, mode: 'insensitive' } },
+                { email: { contains: search, mode: 'insensitive' } },
+            ];
+        }
+
         const [users, total] = await Promise.all([
             prisma.user.findMany({
+                where,
                 skip,
                 take: limit,
                 orderBy: { createdAt: 'desc' },
@@ -45,7 +53,7 @@ export async function GET(request: NextRequest) {
                     },
                 },
             }),
-            prisma.user.count(),
+            prisma.user.count({ where }),
         ]);
 
         return NextResponse.json({
