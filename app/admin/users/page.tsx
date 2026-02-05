@@ -13,10 +13,11 @@ interface User {
     language: string;
     createdAt: string;
     lastLoginAt: string | null;
-    userStreaks: Array<{
+    userStreak: {
         currentStreak: number;
         longestStreak: number;
-    }>;
+    } | null;
+
 }
 
 export default function UsersManagement() {
@@ -275,9 +276,9 @@ export default function UsersManagement() {
                                                         )}
                                                     </td>
                                                     <td style={{ padding: '1rem' }}>
-                                                        {user.userStreaks[0] ? (
+                                                        {user.userStreak ? (
                                                             <span style={{ color: '#e74c3c', fontWeight: '600' }}>
-                                                                🔥 {user.userStreaks[0].currentStreak} dias
+                                                                🔥 {user.userStreak.currentStreak} dias
                                                             </span>
                                                         ) : (
                                                             <span style={{ color: '#95a5a6' }}>-</span>
