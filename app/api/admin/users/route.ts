@@ -45,7 +45,8 @@ export async function GET(request: NextRequest) {
                     language: true,
                     createdAt: true,
                     lastLoginAt: true,
-                    userStreaks: {
+                    userStreak: {
+
                         select: {
                             currentStreak: true,
                             longestStreak: true,
