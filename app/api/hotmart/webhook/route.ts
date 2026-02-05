@@ -119,8 +119,8 @@ async function handlePurchaseApproved(data: any) {
         });
 
         // Verificar se é o produto do Telegram
-        const isTelegramProduct = process.env.HOTMART_TELEGRAM_PRODUCT_ID &&
-            data.productId === process.env.HOTMART_TELEGRAM_PRODUCT_ID;
+        const isTelegramProduct = Boolean(process.env.HOTMART_TELEGRAM_PRODUCT_ID &&
+            data.productId === process.env.HOTMART_TELEGRAM_PRODUCT_ID);
 
         // Se não existe, criar novo usuário
         if (!user) {
