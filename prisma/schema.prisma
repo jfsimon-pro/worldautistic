@@ -8,7 +8,7 @@ datasource db {
 }
 
 model Achievement {
-  id              String            @id
+  id              String            @id @default(cuid())
   name            String
   description     String
   icon            String
@@ -20,14 +20,14 @@ model Achievement {
   descriptionEn   String?
   descriptionEs   String?
   createdAt       DateTime          @default(now())
-  updatedAt       DateTime
+  updatedAt       DateTime          @updatedAt
   UserAchievement UserAchievement[]
 
   @@index([type])
 }
 
 model Activity {
-  id               String             @id
+  id               String             @id @default(cuid())
   type             ActivityType
   level            DifficultyLevel
   componentName    String
@@ -42,7 +42,7 @@ model Activity {
   maxAttempts      Int                @default(5)
   isActive         Boolean            @default(true)
   createdAt        DateTime           @default(now())
-  updatedAt        DateTime
+  updatedAt        DateTime           @updatedAt
   ActivityProgress ActivityProgress[]
 
   @@index([isActive])
@@ -51,7 +51,7 @@ model Activity {
 }
 
 model ActivityProgress {
-  id               String    @id
+  id               String    @id @default(cuid())
   userId           String
   activityId       String
   attempts         Int       @default(0)
@@ -64,7 +64,7 @@ model ActivityProgress {
   completedAt      DateTime?
   metadata         Json?
   createdAt        DateTime  @default(now())
-  updatedAt        DateTime
+  updatedAt        DateTime  @updatedAt
   Activity         Activity  @relation(fields: [activityId], references: [id], onDelete: Cascade)
   User             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -75,16 +75,16 @@ model ActivityProgress {
 }
 
 model AppSettings {
-  id          String   @id
+  id          String   @id @default(cuid())
   key         String   @unique
   value       Json
   description String?
-  updatedAt   DateTime
+  updatedAt   DateTime @updatedAt
   updatedBy   String?
 }
 
 model Card {
-  id          String       @id
+  id          String       @id @default(cuid())
   category    CardCategory
   identifier  String       @unique
   namePt      String
@@ -100,14 +100,14 @@ model Card {
   order       Int          @default(0)
   isActive    Boolean      @default(true)
   createdAt   DateTime     @default(now())
-  updatedAt   DateTime
+  updatedAt   DateTime     @updatedAt
 
   @@index([category])
   @@index([isActive])
 }
 
 model DailyActivity {
-  id                  String   @id
+  id                  String   @id @default(cuid())
   userId              String
   date                DateTime @db.Date
   activitiesCompleted Int      @default(0)
@@ -120,7 +120,7 @@ model DailyActivity {
   cardsViewed         Int      @default(0)
   frequenciesListened Int      @default(0)
   createdAt           DateTime @default(now())
-  updatedAt           DateTime
+  updatedAt           DateTime @updatedAt
 
   @@unique([userId, date])
   @@index([date])
@@ -128,7 +128,7 @@ model DailyActivity {
 }
 
 model Frequency {
-  id                String            @id
+  id                String            @id @default(cuid())
   categoryId        String
   name              String
   description       String?
@@ -140,7 +140,7 @@ model Frequency {
   isActive          Boolean           @default(true)
   playCount         Int               @default(0)
   createdAt         DateTime          @default(now())
-  updatedAt         DateTime
+  updatedAt         DateTime          @updatedAt
   FrequencyCategory FrequencyCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
   @@index([categoryId])
@@ -148,7 +148,7 @@ model Frequency {
 }
 
 model FrequencyCategory {
-  id            String      @id
+  id            String      @id @default(cuid())
   name          String      @unique
   description   String?
   nameEn        String?
@@ -160,14 +160,14 @@ model FrequencyCategory {
   order         Int         @default(0)
   isActive      Boolean     @default(true)
   createdAt     DateTime    @default(now())
-  updatedAt     DateTime
+  updatedAt     DateTime    @updatedAt
   Frequency     Frequency[]
 
   @@index([isActive])
 }
 
 model Game {
-  id            String         @id
+  id            String         @id @default(cuid())
   name          String
   type          GameType
   description   String?
@@ -182,7 +182,7 @@ model Game {
   isActive      Boolean        @default(true)
   isDraft       Boolean        @default(false)
   createdAt     DateTime       @default(now())
-  updatedAt     DateTime
+  updatedAt     DateTime       @updatedAt
   GameProgress  GameProgress[]
 
   @@index([isActive])
@@ -190,7 +190,7 @@ model Game {
 }
 
 model GameProgress {
-  id           String   @id
+  id           String   @id @default(cuid())
   userId       String
   gameId       String
   attempts     Int      @default(0)
@@ -201,7 +201,7 @@ model GameProgress {
   lastPlayedAt DateTime @default(now())
   metadata     Json?
   createdAt    DateTime @default(now())
-  updatedAt    DateTime
+  updatedAt    DateTime @updatedAt
   Game         Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
   User         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -211,7 +211,7 @@ model GameProgress {
 }
 
 model Notification {
-  id        String           @id
+  id        String           @id @default(cuid())
   userId    String
   type      NotificationType
   title     String
@@ -227,7 +227,7 @@ model Notification {
 }
 
 model Purchase {
-  id                   String         @id
+  id                   String         @id @default(cuid())
   userId               String
   hotmartTransactionId String         @unique
   hotmartProductId     String
@@ -246,7 +246,7 @@ model Purchase {
   subscriptionStatus   String?
   metadata             Json?
   createdAt            DateTime       @default(now())
-  updatedAt            DateTime
+  updatedAt            DateTime       @updatedAt
   User                 User           @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([hotmartTransactionId])
@@ -270,7 +270,7 @@ model RefreshToken {
 }
 
 model Story {
-  id            String      @id
+  id            String      @id @default(cuid())
   type          ContentType
   title         String
   content       String
@@ -288,7 +288,7 @@ model Story {
   publishedAt   DateTime?
   authorId      String?
   createdAt     DateTime    @default(now())
-  updatedAt     DateTime
+  updatedAt     DateTime    @updatedAt
 
   @@index([isActive])
   @@index([isDraft])
@@ -296,7 +296,7 @@ model Story {
 }
 
 model User {
-  id                    String             @id
+  id                    String             @id @default(cuid())
   email                 String             @unique
   passwordHash          String
   name                  String
@@ -306,7 +306,7 @@ model User {
   language              String             @default("pt")
   soundEnabled          Boolean            @default(true)
   createdAt             DateTime           @default(now())
-  updatedAt             DateTime
+  updatedAt             DateTime           @updatedAt
   lastLoginAt           DateTime?
   hasActiveSubscription Boolean            @default(false)
   subscriptionExpiresAt DateTime?
@@ -327,7 +327,7 @@ model User {
 }
 
 model UserAchievement {
-  id            String      @id
+  id            String      @id @default(cuid())
   userId        String
   achievementId String
   unlockedAt    DateTime    @default(now())
@@ -339,23 +339,23 @@ model UserAchievement {
 }
 
 model UserStreak {
-  id             String   @id
+  id             String   @id @default(cuid())
   userId         String   @unique
   currentStreak  Int      @default(0)
   longestStreak  Int      @default(0)
   lastActiveDate DateTime @default(now())
-  updatedAt      DateTime
+  updatedAt      DateTime @updatedAt
   User           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
 }
 
 model Whitelist {
-  id        String   @id
+  id        String   @id @default(cuid())
   email     String   @unique
   note      String?
   createdAt DateTime @default(now())
-  updatedAt DateTime
+  updatedAt DateTime @updatedAt
 }
 
 enum AchievementType {
