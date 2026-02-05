@@ -31,7 +31,8 @@ export async function GET(request: NextRequest) {
         // Buscar usuários sem streak
         const usersWithoutStreak = await prisma.user.findMany({
             where: {
-                userStreaks: {
+                userStreak: {
+
                     none: {},
                 },
             },
