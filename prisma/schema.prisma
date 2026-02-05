@@ -21,7 +21,7 @@ model Achievement {
   descriptionEs   String?
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
-  UserAchievement UserAchievement[]
+  userAchievements UserAchievement[]
 
   @@index([type])
 }
@@ -43,7 +43,7 @@ model Activity {
   isActive         Boolean            @default(true)
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
-  ActivityProgress ActivityProgress[]
+  activityProgress ActivityProgress[]
 
   @@index([isActive])
   @@index([level])
@@ -65,8 +65,8 @@ model ActivityProgress {
   metadata         Json?
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
-  Activity         Activity  @relation(fields: [activityId], references: [id], onDelete: Cascade)
-  User             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  activity         Activity  @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, activityId, lastAttemptAt])
   @@index([activityId])
@@ -141,7 +141,7 @@ model Frequency {
   playCount         Int               @default(0)
   createdAt         DateTime          @default(now())
   updatedAt         DateTime          @updatedAt
-  FrequencyCategory FrequencyCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  category          FrequencyCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
   @@index([categoryId])
   @@index([isActive])
@@ -161,7 +161,7 @@ model FrequencyCategory {
   isActive      Boolean     @default(true)
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
-  Frequency     Frequency[]
+  frequencies    Frequency[]
 
   @@index([isActive])
 }
@@ -183,7 +183,7 @@ model Game {
   isDraft       Boolean        @default(false)
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
-  GameProgress  GameProgress[]
+  gameProgress  GameProgress[]
 
   @@index([isActive])
   @@index([type])
@@ -202,8 +202,8 @@ model GameProgress {
   metadata     Json?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-  Game         Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
-  User         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  game         Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, gameId])
   @@index([gameId])
@@ -247,7 +247,7 @@ model Purchase {
   metadata             Json?
   createdAt            DateTime       @default(now())
   updatedAt            DateTime       @updatedAt
-  User                 User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                 User           @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([hotmartTransactionId])
   @@index([purchaseDate])
@@ -262,7 +262,7 @@ model RefreshToken {
   userId    String
   expiresAt DateTime
   createdAt DateTime @default(now())
-  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([expiresAt])
   @@index([token])
@@ -313,12 +313,12 @@ model User {
   subscriptionStatus    String?            @default("inactive")
   hasTelegramAccess     Boolean            @default(false)
 
-  ActivityProgress      ActivityProgress[]
-  GameProgress          GameProgress[]
-  Purchase              Purchase[]
-  RefreshToken          RefreshToken[]
-  UserAchievement       UserAchievement[]
-  UserStreak            UserStreak?
+  activityProgress      ActivityProgress[]
+  gameProgress          GameProgress[]
+  purchases             Purchase[]
+  refreshTokens         RefreshToken[]
+  userAchievements       UserAchievement[]
+  userStreak            UserStreak?
 
   @@index([email])
   @@index([hasActiveSubscription])
@@ -331,8 +331,8 @@ model UserAchievement {
   userId        String
   achievementId String
   unlockedAt    DateTime    @default(now())
-  Achievement   Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
-  User          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievement   Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, achievementId])
   @@index([userId])
@@ -345,7 +345,7 @@ model UserStreak {
   longestStreak  Int      @default(0)
   lastActiveDate DateTime @default(now())
   updatedAt      DateTime @updatedAt
-  User           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
 }
