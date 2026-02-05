@@ -98,7 +98,7 @@ export default function HomePage() {
                     {/* Telegram Group Card (Large) */}
                     <a
                         href={user?.hasTelegramAccess
-                            ? "https://t.me/joinchat/AAAAAELftqbP5YNnucA-5A"
+                            ? "https://t.me/+J6ta-zlEMtk0ZThh"
                             : "https://pay.hotmart.com/O84341348Y"
                         }
                         target="_blank"
