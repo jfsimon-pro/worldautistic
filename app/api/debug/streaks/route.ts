@@ -32,8 +32,7 @@ export async function GET(request: NextRequest) {
         const usersWithoutStreak = await prisma.user.findMany({
             where: {
                 userStreak: {
-
-                    none: {},
+                    is: null,
                 },
             },
             select: {
