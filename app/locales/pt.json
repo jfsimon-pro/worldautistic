@@ -46,7 +46,8 @@
         "voiceCommands": "Comandos de Voz",
         "soundFrequencies": "Frequências Sonoras",
         "games": "Jogos",
-        "ebooks": "Ebooks"
+        "ebooks": "Ebooks",
+        "telegramGroup": "Grupo Telegram"
     },
     "ebooks": {
         "foodSelectivity": "Manual de Seletividade Alimentar",

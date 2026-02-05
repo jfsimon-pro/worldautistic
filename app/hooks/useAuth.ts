@@ -10,12 +10,14 @@ interface User {
     role: 'ADMIN' | 'USER';
     language: string;
     soundEnabled: boolean;
+    hasTelegramAccess: boolean;
     avatar: string | null;
     dateOfBirth: string | null;
     createdAt: string;
     updatedAt: string;
     lastLoginAt: string | null;
 }
+
 
 export function useAuth() {
     const [user, setUser] = useState<User | null>(null);

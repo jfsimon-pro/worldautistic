@@ -46,7 +46,8 @@
         "voiceCommands": "Comandos de Voz",
         "soundFrequencies": "Frecuencias Sonoras",
         "games": "Juegos",
-        "ebooks": "Ebooks"
+        "ebooks": "Ebooks",
+        "telegramGroup": "Grupo de Telegram"
     },
     "settings": {
         "title": "Configuración",

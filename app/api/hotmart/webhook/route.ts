@@ -118,6 +118,10 @@ async function handlePurchaseApproved(data: any) {
             where: { email: data.buyerEmail },
         });
 
+        // Verificar se é o produto do Telegram
+        const isTelegramProduct = process.env.HOTMART_TELEGRAM_PRODUCT_ID &&
+            data.productId === process.env.HOTMART_TELEGRAM_PRODUCT_ID;
+
         // Se não existe, criar novo usuário
         if (!user) {
             const temporaryPassword = generateTemporaryPassword();
@@ -129,9 +133,10 @@ async function handlePurchaseApproved(data: any) {
                     name: data.buyerName,
                     passwordHash,
                     role: 'USER',
-                    subscriptionStatus: 'active',
-                    subscriptionExpiresAt: calculateExpirationDate(data.isRecurrent),
-                    hasActiveSubscription: true,
+                    subscriptionStatus: isTelegramProduct ? 'inactive' : 'active',
+                    subscriptionExpiresAt: isTelegramProduct ? null : calculateExpirationDate(data.isRecurrent),
+                    hasActiveSubscription: !isTelegramProduct,
+                    hasTelegramAccess: isTelegramProduct,
                 },
             });
 
@@ -143,11 +148,21 @@ async function handlePurchaseApproved(data: any) {
 
         } else {
             // Usuário já existe - ativar/renovar acesso
-            const expiresAt = calculateExpirationDate(data.isRecurrent);
-            await activateAccess(user.id, expiresAt, 'active');
-
-            console.log('🔄 Acesso renovado para usuário existente:', user.id);
+            if (isTelegramProduct) {
+                // Compra do Telegram - apenas ativar acesso ao grupo
+                await prisma.user.update({
+                    where: { id: user.id },
+                    data: { hasTelegramAccess: true },
+                });
+                console.log('📱 Acesso ao Telegram ativado para usuário:', user.id);
+            } else {
+                // Compra do app - ativar assinatura
+                const expiresAt = calculateExpirationDate(data.isRecurrent);
+                await activateAccess(user.id, expiresAt, 'active');
+                console.log('🔄 Acesso renovado para usuário existente:', user.id);
+            }
         }
+
 
         // Sanitizar datas antes de salvar
         const sanitizeDate = (date: Date | undefined): Date | undefined => {

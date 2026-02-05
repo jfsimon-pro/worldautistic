@@ -256,8 +256,7 @@ model Purchase {
 }
 
 model RefreshToken {
-  id        String   @id @default(cuid())
-
+  id        String   @id
   token     String   @unique
   userId    String
   expiresAt DateTime
@@ -311,8 +310,6 @@ model User {
   hasActiveSubscription Boolean            @default(false)
   subscriptionExpiresAt DateTime?
   subscriptionStatus    String?            @default("inactive")
-  hasTelegramAccess     Boolean            @default(false)
-
   ActivityProgress      ActivityProgress[]
   GameProgress          GameProgress[]
   Purchase              Purchase[]

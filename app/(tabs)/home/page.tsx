@@ -5,9 +5,12 @@ import PageLayout from '../../components/PageLayout';
 import AuthGuard from '../../components/AuthGuard';
 import styles from '../../styles/Home.module.css';
 import { useTranslation } from '../../context/LanguageContext';
+import { useAuth } from '../../hooks/useAuth';
 
 export default function HomePage() {
     const { t } = useTranslation();
+    const { user } = useAuth();
+
 
     return (
         <AuthGuard>
@@ -91,6 +94,24 @@ export default function HomePage() {
                             <img src="/images/spaceman-ebook.png" alt={t('home.ebooks')} className={styles['card-image']} />
                         </div>
                     </Link>
+
+                    {/* Telegram Group Card (Large) */}
+                    <a
+                        href={user?.hasTelegramAccess
+                            ? "https://t.me/joinchat/AAAAAELftqbP5YNnucA-5A"
+                            : "https://pay.hotmart.com/O84341348Y"
+                        }
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`${styles['home-card']} ${styles['card-large']} ${styles['card-telegram']}`}
+                    >
+                        <div className={styles['card-content']}>
+                            <div className={styles['card-title']}>{t('home.telegramGroup')}</div>
+                        </div>
+                        <div className={styles['card-image-wrapper']}>
+                            <img src="/images/spaceman-telegram.png" alt={t('home.telegramGroup')} className={styles['card-image']} />
+                        </div>
+                    </a>
 
                 </div>
             </PageLayout>
